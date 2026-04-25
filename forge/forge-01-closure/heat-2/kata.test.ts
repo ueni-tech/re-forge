@@ -10,8 +10,8 @@ describe("[heat-2] createLatestFetcher", () => {
     const fetcher = createLatestFetcher();
     const results: string[] = [];
 
-    fetcher("red", 300, r => results.push(r));
-    fetcher("blue", 100, r => results.push(r));
+    fetcher("red", 300, (r) => results.push(r));
+    fetcher("blue", 100, (r) => results.push(r));
 
     vi.advanceTimersByTime(300);
 
@@ -23,9 +23,9 @@ describe("[heat-2] createLatestFetcher", () => {
     const fetcher = createLatestFetcher();
     const results: string[] = [];
 
-    fetcher("a", 200, r => results.push(r));
-    fetcher("b", 50, r => results.push(r));
-    fetcher("c", 150, r => results.push(r));
+    fetcher("a", 200, (r) => results.push(r));
+    fetcher("b", 50, (r) => results.push(r));
+    fetcher("c", 150, (r) => results.push(r));
 
     vi.advanceTimersByTime(200);
 
@@ -38,8 +38,8 @@ describe("[heat-2] createLatestFetcher", () => {
     const r1: string[] = [];
     const r2: string[] = [];
 
-    f1("x", 100, r => r1.push(r));
-    f2("y", 100, r => r2.push(r));
+    f1("x", 100, (r) => r1.push(r));
+    f2("y", 100, (r) => r2.push(r));
 
     vi.advanceTimersByTime(100);
 

@@ -4,6 +4,9 @@
 // "[label #N] message" 形式の文字列を返す。
 
 export function createLogger(label: string): (message: string) => string {
-  // ここに実装する
-  throw new Error("not implemented");
+  let count = 0;
+  return function (message) {
+    count++;
+    return `[${label} #${count}] ${message}`;
+  };
 }

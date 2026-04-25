@@ -6,7 +6,7 @@
 export function fakeRequest(
   url: string,
   delay: number,
-  cb: (result: string) => void
+  cb: (result: string) => void,
 ): void {
   setTimeout(() => cb(`response:${url}`), delay);
 }
@@ -14,8 +14,16 @@ export function fakeRequest(
 export function createLatestFetcher(): (
   url: string,
   delay: number,
-  callback: (result: string) => void
+  callback: (result: string) => void,
 ) => void {
-  // ここに実装する
-  throw new Error("not implemented");
+  let latestRequestNumber = 0;
+  return function (url, delay, callback) {
+    const selfRequestNunber = ++latestRequestNumber;
+    fakeRequest(url, delay, function (result) {
+      if (selfRequestNunber !== latestRequestNumber) {
+        return;
+      }
+      callback(result);
+    });
+  };
 }
