@@ -66,3 +66,4 @@ npm run test:run
 | forge | テーマ | ステータス |
 |---|---|---|
 | forge-01-closure | クロージャ / request sequencing | 🔨 進行中 |
+| forge-02-gallery-sync | 商品ギャラリー: シグネチャ・非同期世代・dispatch 順 | 🔨 kata はスタブ／解答は `kata.solution.ts` |
