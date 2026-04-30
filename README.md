@@ -67,3 +67,4 @@ npm run test:run
 |---|---|---|
 | forge-01-closure | クロージャ / request sequencing | 🔨 進行中 |
 | forge-02-gallery-sync | 商品ギャラリー: シグネチャ・非同期世代・dispatch 順 | 🔨 kata はスタブ／解答は `kata.solution.ts` |
+| forge-03-variant-listing-blocks | 出品コードバリエーション: hidden 配列・祖先パス・select+notify | 🔨 kata はスタブ／解答は `kata.solution.ts` |
