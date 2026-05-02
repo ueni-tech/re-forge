@@ -1,4 +1,10 @@
 // [heat-1] data-goods-image-variations 相当の JSON 文字列を安全に読む
+//
+// 実務での使われ方:
+//   HTML の data 属性やサーバー埋め込みに JSON を載せ、クライアントで variation マップを
+//   復元するとき。不正・空・型外れを全部例外にせず null に潰し、初期化やハイドレーションを
+//   安全に進めるガード付きパース。
+//
 // parseGoodsImageVariationsJson を実装せよ。
 //
 // 仕様:

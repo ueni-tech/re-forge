@@ -1,4 +1,10 @@
 // [heat-3] ブロック更新 + variationchange 相当の通知を1か所にまとめる
+//
+// 実務での使われ方:
+//   バリエーション選択で各行の hidden を更新したあと、ギャラリーや計測モジュールへ
+//   一度だけ通知したいとき。更新ロジックと CustomEvent に相当する notify を
+//   まとめ、呼び出し側の重複を防ぐファクトリ。
+//
 // createVariationSelectionSession を実装せよ。
 //
 // BlockRow は UI の1行（カート用ブロック）に対応し、listingCode と hidden を持つ。

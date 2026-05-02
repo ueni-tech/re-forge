@@ -1,4 +1,10 @@
 // [heat-3] 非同期キャッシュローダー
+//
+// 実務での使われ方:
+//   タブやフィルタごとにデータを fetch しつつ、一度取れた結果はメモリに載せて
+//   再訪問時は同期的に返す、といった「許可キーのみ fetch・それ以外は無視」の
+//   データ取得ゲート。ストレージ差し替えでテストもしやすい。
+//
 // createAsyncCacheLoader(storage, validKeys[, fetcher]) を実装せよ。
 // 返却された load(key, delay, callback) は:
 //   ① validKeys に含まれないキーは何もしない（callback・storage・fetcher はすべて触らない）

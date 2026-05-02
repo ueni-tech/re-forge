@@ -1,4 +1,10 @@
 // [heat-2] 初期 listing code とマップ内の有無（goods-image 同期の前提）
+//
+// 実務での使われ方:
+//   ページロード時に「属性で指定されたコード」と「JSON に実在するキー」を揃え、
+//   ギャラリーとカートブロックの初期表示を一貫させるとき。マップに無いコードや
+//   空のときのフォールバック（先頭キー等）を決める前提関数。
+//
 // variationMapHasCode と resolveInitialListingCode を実装せよ。
 //
 // variationMapHasCode(map, code):

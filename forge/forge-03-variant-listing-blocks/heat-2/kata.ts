@@ -1,4 +1,10 @@
 // [heat-2] 祖先チェーン上の最初の listing code（closest に相当）
+//
+// 実務での使われ方:
+//   クリックやキーボード操作で得た DOM の経路（composedPath 等）から、
+//   ルート（例: .js-goods-variation）までの間で「最初に意味のある出品コード」を
+//   拾うとき。イベント委譲で子要素をクリックしても親の variation 文脈を解決する。
+//
 // firstListingCodeOnPath を実装せよ。
 //
 // path[0] はクリック対象（ターゲット）、path[path.length - 1] は `.js-goods-variation` 相当のルート。

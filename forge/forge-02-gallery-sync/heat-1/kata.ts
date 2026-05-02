@@ -1,15 +1,12 @@
 // [heat-1] 画像一覧シグネチャ（image set signature）
-
+//
+// 実務での使われ方:
+//   商品 PDP のギャラリーで、ベース URL と main/thumb の一覧が変わったかを
+//   オブジェクト全体の deep equal なしで判定したいとき。Grid・ページャ・
+//   サムネ同期など「同一画像セットか」を安く比較する前提処理。
+//
 // imageSetSignature(base, files) を実装せよ。
-
 //
-
-// 目的: Redux の image.base / image.list が差し替わったとき、
-
-// 「前回と同じ画像セットか」を **文字列比較** で安く判定する（Grid / PageControl の考え方）。
-
-//
-
 // 仕様:
 
 //   - base が null / undefined / 空文字、または files.length === 0 のとき、'' を返す。

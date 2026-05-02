@@ -1,4 +1,10 @@
 // [heat-2] 非同期結果の世代ガード（previewLoadSeq の核）
+//
+// 実務での使われ方:
+//   プレビュー画像の取得や一覧取得が Promise で重なったとき、古い解決が
+//   新しいバリエーションや一覧の表示を上書きしないようにする場面。
+//   （showPreview と setImageList が短い間隔で走る等）
+//
 // createLatestByGeneration(load) を実装せよ。
 //
 // load(key) は Promise<T> を返す外部 I/O のスタブ想定。
@@ -9,9 +15,6 @@
 //   - ある request の load が解決したとき、それが「解決時点で最新の世代」なら T を返す。
 //   - すでにより新しい request が走っていたら null を返す（古い応答を捨てる）。
 //   - 古い世代は Promise を reject せず、必ず null で解決すること。
-//
-// 目的: showPreview(0) と setImageList のあいだで二重に getImage が走るなど、
-// 遅延完了が新しい状態を上書きしないようにする。
 //
 // 行き詰まったら kata.solution.ts を参照。
 
