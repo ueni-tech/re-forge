@@ -35,5 +35,17 @@ export function createCategoryLoader(
   categoryEndpoints: EndpointMap,
   _loader: typeof fakeLoad = fakeLoad,
 ): (categoryId: string) => void {
-  throw new Error("not implemented");
+  // ここから実装
+  let latestRequestNum = 0;
+  return function (categoryId) {
+    const selfRequestNum = ++latestRequestNum;
+    if (!Object.hasOwn(categoryEndpoints, categoryId)) return;
+    const url = categoryEndpoints[categoryId];
+    const delay = categoryId.length * 20;
+    const items = [];
+    _loader(url, delay, items, function (items) {
+      if (selfRequestNum !== latestRequestNum) return;
+      items.length === 0 ? store.setEmpty() : store.setItems(items);
+    });
+  };
 }
