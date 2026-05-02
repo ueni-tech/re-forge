@@ -2,8 +2,10 @@
 // createVariationNavigateCoordinator を実装せよ。
 //
 // 返却された navigate(listingCode) は:
-//   - listingCode が空文字のとき、applyGallery / applyCart をいずれも呼ばない。
-//   - それ以外のとき、applyGallery があれば先に1回、続けて applyCart があれば1回呼ぶ。
+//   - listingCode が空文字（""）のときだけスキップする（空白のみの文字列は空文字とみなさない）。
+//   - その場合 applyGallery / applyCart をいずれも呼ばない。
+//   - それ以外のとき、deps.applyGallery が関数なら先に1回、続けて deps.applyCart が関数なら1回呼ぶ。
+//   - 省略された側（undefined）は呼ばない。両方省略でも例外を投げない。
 //   - どちらか一方だけでも、指定された順序を守る（ギャラリー → カート）。
 //
 // 行き詰まったら kata.solution.ts を参照。

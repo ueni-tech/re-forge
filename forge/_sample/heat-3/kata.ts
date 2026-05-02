@@ -1,9 +1,11 @@
 // [heat-3] 非同期キャッシュローダー
-// createAsyncCacheLoader(storage, validKeys) を実装せよ。
+// createAsyncCacheLoader(storage, validKeys[, fetcher]) を実装せよ。
 // 返却された load(key, delay, callback) は:
-//   ① validKeys に含まれないキーは何もしない
-//   ② storage.get(key) が undefined でなければ即座に callback(value) を呼ぶ
-//   ③ undefined なら fetcher を呼び、結果を storage.set して callback に渡す
+//   ① validKeys に含まれないキーは何もしない（callback・storage・fetcher はすべて触らない）
+//   ② storage.get(key) が undefined でなければ同期的に callback(value) を呼び、fetcher は使わない
+//   ③ undefined なら fetcher(key, delay, innerCb) を呼ぶ。完了後に storage.set(key, result) してから callback(result) を呼ぶ
+//
+// デフォルト fetcher は fakeFetch で、完了時に innerCb(`fetched:${key}`) が渡る。
 
 export type Storage = {
   get: (key: string) => string | undefined;

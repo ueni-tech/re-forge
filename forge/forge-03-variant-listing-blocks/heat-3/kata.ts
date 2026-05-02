@@ -7,6 +7,10 @@
 //   ② 一致する行があれば、hiddenFlagsForSelection と同じ規則で各行の hidden を更新する。
 //   ③ その後 notify({ listingCode }) を必ず1回呼ぶ（②で更新したあとの値を参照できる）。
 //
+// そのほか:
+//   - 渡された blocks 配列および各行オブジェクトはミュータブルとみなし、hidden はその場で更新する（新しい配列を返さない）。
+//   - notify は select の同期的な処理の末尾で呼ぶ（テストは同期的な呼び出し回数を検証する）。
+//
 // 行き詰まったら kata.solution.ts を参照。
 
 export type BlockRow = { listingCode: string; hidden: boolean };

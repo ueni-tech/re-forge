@@ -8,6 +8,7 @@
 //   - request を連続で呼ぶと、内部の「世代」が進む。
 //   - ある request の load が解決したとき、それが「解決時点で最新の世代」なら T を返す。
 //   - すでにより新しい request が走っていたら null を返す（古い応答を捨てる）。
+//   - 古い世代は Promise を reject せず、必ず null で解決すること。
 //
 // 目的: showPreview(0) と setImageList のあいだで二重に getImage が走るなど、
 // 遅延完了が新しい状態を上書きしないようにする。

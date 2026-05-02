@@ -1,12 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { createCategoryLoader, fakeLoad, type Store } from "./kata";
 
-function makeStore(): Store & { itemsCalls: string[][], emptyCalls: number } {
+function makeStore(): Store & { itemsCalls: string[][]; emptyCalls: number } {
   const store = {
     itemsCalls: [] as string[][],
     emptyCalls: 0,
-    setItems(items: string[]) { this.itemsCalls.push(items); },
-    setEmpty() { this.emptyCalls++; },
+    setItems(items: string[]) {
+      this.itemsCalls.push(items);
+    },
+    setEmpty() {
+      this.emptyCalls++;
+    },
   };
   return store;
 }
@@ -34,9 +38,13 @@ describe("[heat-3] createCategoryLoader", () => {
       setTimeout(() => cb(items), delay);
     });
 
-    const load = createCategoryLoader(store, endpoints, mockLoader as typeof fakeLoad);
-    load("shoes"); // delay 200
-    load("bags");  // delay 50（最新）
+    const load = createCategoryLoader(
+      store,
+      endpoints,
+      mockLoader as typeof fakeLoad,
+    );
+    load("shoes"); // delay = 5 * 20 = 100ms
+    load("bags"); // delay = 4 * 20 = 80ms（最新リクエスト・先に完了）
 
     vi.advanceTimersByTime(200);
 
@@ -52,8 +60,12 @@ describe("[heat-3] createCategoryLoader", () => {
       setTimeout(() => cb([]), delay);
     });
 
-    const load = createCategoryLoader(store, endpoints, mockLoader as typeof fakeLoad);
-    load("empty");
+    const load = createCategoryLoader(
+      store,
+      endpoints,
+      mockLoader as typeof fakeLoad,
+    );
+    load("empty"); // delay = 5 * 20 = 100ms
 
     vi.advanceTimersByTime(100);
 

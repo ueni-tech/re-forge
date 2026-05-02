@@ -1,9 +1,17 @@
 // [heat-3] データソース切替ファクトリ
-// createCategoryLoader(store, categoryEndpoints) を実装せよ。
-// 返却された load(categoryId) は:
-//   ① categoryEndpoints[categoryId] が存在しなければ何もしない
-//   ② 存在すればデータを非同期取得し、最新リクエストのみ store.setItems(items) に反映
-//   ③ 取得結果が空なら store.setEmpty() を呼ぶ
+// createCategoryLoader(store, categoryEndpoints[, loader]) を実装せよ。
+//
+// 返却された load(categoryId) の振る舞い:
+//   ① categoryEndpoints[categoryId] が存在しなければ何もしない（_loader も呼ばない）
+//   ② 存在すれば _loader で非同期取得し、開始順に関係なく「最後に開始した」リクエストの結果だけを store に反映する
+//      · コールバックで受け取った items の length が 0 なら store.setEmpty()
+//      · それ以外は store.setItems(items)
+//
+// _loader への引数（fakeLoad と同一シグネチャ）:
+//   · 第1引数: そのカテゴリの URL（categoryEndpoints[categoryId]）
+//   · 第2引数 delay（ミリ秒）: categoryId.length * 20（固定の見積りルール）
+//   · 第3引数: 空配列 []（スタブ fakeLoad はこれをそのまま cb に渡す。テスト用モックは URL 等から独自に応答を組み立て、第3引数は無視してよい）
+//   · 第4引数: 上記②の分岐を行うコールバック
 
 export type Store = {
   setItems: (items: string[]) => void;
@@ -17,7 +25,7 @@ export function fakeLoad(
   _url: string,
   delay: number,
   items: string[],
-  cb: (items: string[]) => void
+  cb: (items: string[]) => void,
 ): void {
   setTimeout(() => cb(items), delay);
 }
@@ -25,8 +33,7 @@ export function fakeLoad(
 export function createCategoryLoader(
   store: Store,
   categoryEndpoints: EndpointMap,
-  _loader: typeof fakeLoad = fakeLoad
+  _loader: typeof fakeLoad = fakeLoad,
 ): (categoryId: string) => void {
-  // ここに実装する
   throw new Error("not implemented");
 }

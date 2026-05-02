@@ -12,6 +12,11 @@
 //       2) slider を 0
 //       3) base / mains を next で更新
 //
+// reduce（純粋関数）の意味:
+//   - setPreview: state.preview を action.index に置き換える（他フィールドはそのまま）。
+//   - setSlider: state.slider を action.index に置き換える（他フィールドはそのまま）。
+//   - setImages: state.base / state.mains を action の値で置き換える（preview / slider はその dispatch では変更しない）。
+//
 // 行き詰まったら kata.solution.ts を参照。
 
 export type State = {
