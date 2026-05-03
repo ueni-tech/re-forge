@@ -21,6 +21,15 @@
 
 export type BlockRow = { listingCode: string; hidden: boolean };
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param _blocks - （記述）
+ * @param _notify - （記述）
+ * @returns `select` を持つセッションオブジェクト
+ */
 export function createVariationSelectionSession(
   _blocks: BlockRow[],
   _notify: (detail: { listingCode: string }) => void,

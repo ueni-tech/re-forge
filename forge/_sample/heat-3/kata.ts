@@ -18,6 +18,15 @@ export type Storage = {
   set: (key: string, value: string) => void;
 };
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param key - （記述）
+ * @param delay - （記述）
+ * @param cb - （記述）
+ */
 // スタブ（変更不要）
 export function fakeFetch(
   key: string,
@@ -27,6 +36,16 @@ export function fakeFetch(
   setTimeout(() => cb(`fetched:${key}`), delay);
 }
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param storage - （記述）
+ * @param validKeys - （記述）
+ * @param _fetcher - （記述）
+ * @returns `load(key, delay, callback)` 関数
+ */
 export function createAsyncCacheLoader(
   storage: Storage,
   validKeys: string[],

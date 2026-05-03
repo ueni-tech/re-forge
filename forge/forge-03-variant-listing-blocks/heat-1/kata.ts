@@ -15,6 +15,15 @@
 //
 // 行き詰まったら kata.solution.ts を参照。
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param _rows - （記述）
+ * @param _selected - （記述）
+ * @returns 各行が hidden かどうかのフラグ配列
+ */
 export function hiddenFlagsForSelection(
   _rows: readonly string[],
   _selected: string,

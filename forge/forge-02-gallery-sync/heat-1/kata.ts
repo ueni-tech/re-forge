@@ -18,6 +18,15 @@
 
 export type FileRef = { main?: string; thumb?: string };
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param _base - （記述）
+ * @param _files - （記述）
+ * @returns 画像セットを表すシグネチャ文字列
+ */
 export function imageSetSignature(
   _base: string | null | undefined,
   _files: FileRef[],

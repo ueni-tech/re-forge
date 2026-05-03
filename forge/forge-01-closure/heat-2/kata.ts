@@ -13,6 +13,15 @@
 //   · 内部ではこのファイルの fakeRequest を使うこと（完了時に渡る文字列は常に `response:${url}`）。
 //   · 「採用されなかった」リクエストについては、呼び出し側が渡した callback は一度も呼ばないこと。
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param url - （記述）
+ * @param delay - （記述）
+ * @param cb - （記述）
+ */
 export function fakeRequest(
   url: string,
   delay: number,
@@ -21,6 +30,13 @@ export function fakeRequest(
   setTimeout(() => cb(`response:${url}`), delay);
 }
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @returns `(url, delay, callback) => void`
+ */
 export function createLatestFetcher(): (
   url: string,
   delay: number,

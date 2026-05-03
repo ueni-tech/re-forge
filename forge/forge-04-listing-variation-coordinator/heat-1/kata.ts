@@ -15,6 +15,14 @@
 //
 // 行き詰まったら kata.solution.ts を参照。
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param _raw - （記述）
+ * @returns パース済みマップ、不正時は null
+ */
 export function parseGoodsImageVariationsJson(
   _raw: string | null | undefined,
 ): Record<string, unknown> | null {

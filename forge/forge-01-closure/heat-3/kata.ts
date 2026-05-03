@@ -26,6 +26,16 @@ export type Store = {
 
 export type EndpointMap = Record<string, string>;
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param _url - （記述）
+ * @param delay - （記述）
+ * @param items - （記述）
+ * @param cb - （記述）
+ */
 // スタブ（変更不要）
 export function fakeLoad(
   _url: string,
@@ -36,6 +46,16 @@ export function fakeLoad(
   setTimeout(() => cb(items), delay);
 }
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param store - （記述）
+ * @param categoryEndpoints - （記述）
+ * @param _loader - （記述）
+ * @returns `load(categoryId)` 関数
+ */
 export function createCategoryLoader(
   store: Store,
   categoryEndpoints: EndpointMap,

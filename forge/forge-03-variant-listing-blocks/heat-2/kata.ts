@@ -18,6 +18,14 @@
 
 export type PathNode = { listingCode: string | null | undefined };
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param _path - （記述）
+ * @returns 最初に見つかった listing code、なければ null
+ */
 export function firstListingCodeOnPath(
   _path: readonly PathNode[],
 ): string | null {

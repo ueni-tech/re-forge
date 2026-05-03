@@ -16,6 +16,14 @@
 //
 // 行き詰まったら kata.solution.ts を参照。
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param _deps - （記述）
+ * @returns `navigate(listingCode)` 関数
+ */
 export function createVariationNavigateCoordinator(_deps: {
   applyGallery?: (listingCode: string) => void;
   applyCart?: (listingCode: string) => void;

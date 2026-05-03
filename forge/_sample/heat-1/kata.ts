@@ -9,6 +9,14 @@
 //   get(key, factory) — key がキャッシュ済みならその値を返す、未キャッシュなら factory() を呼びキャッシュして返す
 //   delete(key)       — 該当エントリをキャッシュから削除する
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @template V キャッシュする値の型
+ * @returns `get` と `delete` を持つキャッシュオブジェクト
+ */
 export function createCache<V>(): {
   get: (key: string, factory: () => V) => V;
   delete: (key: string) => void;

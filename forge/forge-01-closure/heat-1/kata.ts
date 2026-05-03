@@ -8,6 +8,14 @@
 // 返却された関数 log(message) を呼ぶたびに
 // "[label #N] message" 形式の文字列を返す。
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param label - （記述）
+ * @returns `log(message)` を返すクロージャ
+ */
 export function createLogger(label: string): (message: string) => string {
   let count = 0;
   return function (message) {

@@ -34,14 +34,39 @@ export type Action =
   | { type: "setSlider"; index: number }
   | { type: "setImages"; base: string; mains: string[] };
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param _state - （記述）
+ * @param _action - （記述）
+ * @returns 次の状態
+ */
 export function reduce(_state: State, _action: Action): State {
   throw new Error("not implemented");
 }
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param _s - （記述）
+ * @returns 状態が仕様どおりか
+ */
 export function isValidState(_s: State): boolean {
   throw new Error("not implemented");
 }
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @param _dispatch - （記述）
+ * @param _next - （記述）
+ */
 export function applyVariationDispatch(
   _dispatch: (a: Action) => void,
   _next: { base: string; mains: string[] },

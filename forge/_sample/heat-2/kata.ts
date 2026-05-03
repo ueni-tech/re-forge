@@ -14,6 +14,15 @@
 
 type Entry<V> = { value: V; expiresAt: number };
 
+/**
+ * 【責務】（記述）
+ *
+ * 【ここで切る理由】（記述）
+ *
+ * @template V キャッシュする値の型
+ * @param ttl エントリの有効期限（ミリ秒）
+ * @returns `get` を持つ TTL キャッシュオブジェクト
+ */
 export function createTTLCache<V>(ttl: number): {
   get: (key: string, factory: () => V) => V;
 } {
