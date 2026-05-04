@@ -10,12 +10,20 @@
 //   delete(key)       — 該当エントリをキャッシュから削除する
 
 /**
- * 【責務】（記述）
+ * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * `createCache<V>()` で一度 `cache` を作っておけば、同じキーに対する重い `factory` は 1 回だけ実行され、以後は保存済みの値を共有して読み出せる入口が手に入る。
  *
- * 【ここで切る理由】（記述）
+ * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - `createCache<V>()` は `cache`（`{ get, delete }`）を返す。
+ * - `cache.get(key, factory)` は、`key` がキャッシュ済みならその値を返し、`factory` は呼ばない。未キャッシュなら `factory()` を 1 回呼んで保存し、その値を返す。
+ * - `cache.delete(key)` はそのキーのエントリだけを消す。次回の `cache.get(key, factory)` で `factory` が再実行される。
+ *
+ * 【判断】（他の書き方と比べて、なぜこの形にした？）
+ * - 「初回だけ実行・以後は再利用」を `createCache` を呼ぶ側で `if (cached)` ガードすると書き忘れが起きるので、`Map` とロジックをこの関数に閉じる。
+ * - 却下案: （他の書き方）→（この案だと何が困るか）ため不採用。
  *
  * @template V キャッシュする値の型
- * @returns `get` と `delete` を持つキャッシュオブジェクト
+ * @returns `get` と `delete` を持つ `cache` オブジェクト
  */
 export function createCache<V>(): {
   get: (key: string, factory: () => V) => V;

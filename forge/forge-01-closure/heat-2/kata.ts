@@ -13,15 +13,6 @@
 //   · 内部ではこのファイルの fakeRequest を使うこと（完了時に渡る文字列は常に `response:${url}`）。
 //   · 「採用されなかった」リクエストについては、呼び出し側が渡した callback は一度も呼ばないこと。
 
-/**
- * 【責務】（記述）
- *
- * 【ここで切る理由】（記述）
- *
- * @param url - （記述）
- * @param delay - （記述）
- * @param cb - （記述）
- */
 export function fakeRequest(
   url: string,
   delay: number,
@@ -31,11 +22,20 @@ export function fakeRequest(
 }
 
 /**
- * 【責務】（記述）
+ * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * `createLatestFetcher()` で一度 `fetcher` を作っておけば、UI 側のどこから何度呼ばれても、古い応答で画面が上書きされない取得の入口が手に入る。
  *
- * 【ここで切る理由】（記述）
+ * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - `createLatestFetcher()` は `fetcher`（型 `(url, delay, callback) => void`）を返す。
+ * - `fetcher` は内部でこのファイルの `fakeRequest` を使って非同期に取得する。
+ * - 完了時、その時点で「最後に開始した `fetcher` 呼び出し」に対応する完了に限り、`callback(result)` を 1 回呼ぶ。
+ * - 採用されなかった `fetcher` 呼び出しでは、渡した `callback` は一度も呼ばれない。
  *
- * @returns `(url, delay, callback) => void`
+ * 【判断】（他の書き方と比べて、なぜこの形にした？）
+ * - `createLatestFetcher` を使わず、画面側で `fakeRequest` を直接呼んで「最新だけ採用」の分岐を書くと、同じバグが各所に散るため、世代管理をこの関数に閉じる。
+ * - 却下案: 画面側で前回リクエストを `AbortController` で都度キャンセルする。`fakeRequest` がキャンセル非対応で、本 kata の契約（採用されない呼び出しでは `callback` を呼ばない）はラッパー側で実現する方が単純なので不採用。
+ *
+ * @returns 最後に開始した `fetcher` 呼び出しの完了時だけ `callback(result)` を呼ぶ関数
  */
 export function createLatestFetcher(): (
   url: string,
@@ -44,9 +44,9 @@ export function createLatestFetcher(): (
 ) => void {
   let latestRequestNumber = 0;
   return function (url, delay, callback) {
-    const selfRequestNunber = ++latestRequestNumber;
+    const selfRequestNumber = ++latestRequestNumber;
     fakeRequest(url, delay, function (result) {
-      if (selfRequestNunber !== latestRequestNumber) {
+      if (selfRequestNumber !== latestRequestNumber) {
         return;
       }
       callback(result);

@@ -19,25 +19,23 @@
 // 行き詰まったら kata.solution.ts を参照。
 
 /**
- * 連続する非同期読み込みのうち、「解決時点で最新の呼び出し」にだけ結果を渡し、
- * それより古い呼び出しは `null` で解決するファクトリ。
+ * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * `createLatestByGeneration(_load)` で一度 `request` を作っておけば、UI 側のどこから連続して呼ばれても、画面に届くのは「解決時点で最新の呼び出し」の結果だけで、古い呼び出しは静かに `null` で解決される非同期取得の入口が手に入る。
  *
- * **責務**
- * - `request` が呼ばれるたびに内部の世代（シーケンス）を進める。
- * - 各呼び出しで `_load(key)` を await し、完了時にその世代がまだ最新なら `T`、
- *   すでに新しい `request` があれば `null` を返す。
+ * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - `createLatestByGeneration(_load)` は `request(key) => Promise<T | null>` を返す。
+ * - `request` を呼ぶたびに内部の世代が進む。各 `request` は `_load(key)` を await する。
+ * - `_load` の解決時、その世代がまだ最新なら `T` で resolve、そうでなければ `null` で resolve する。
+ * - 古い世代の Promise は reject しない。必ず `null` で resolve する（`createLatestByGeneration` を呼ぶ側に try/catch を強要しない）。
  *
- * **ここで切る理由**
- * - `_load`（外部 I/O）と「最新だけ採用する」ポリシーを分離し、
- *   ローダー側に世代管理を混ぜない（再利用・テストがしやすい）。
- *
- * **仕様上の注意**
- * - 古い世代の Promise は reject せず、必ず `null` で解決する。
+ * 【判断】（他の書き方と比べて、なぜこの形にした？）
+ * - 「最新だけ採用する」分岐を `createLatestByGeneration` を呼ぶ側に書くと同じ条件分岐が各所に散るので、世代番号の管理をこのファクトリに閉じる。
+ * - reject ではなく `null` で解決するのは、UI 側の例外ハンドリング負担を増やさないため。
+ * - 却下案: （他の書き方）→（この案だと何が困るか）ため不採用。
  *
  * @template T `_load` が解決する値の型
  * @param _load キーを受け取り `Promise<T>` を返す非同期処理（スタブ・API 呼び出し等）
- * @returns `request` 関数。`request(key)` は `Promise<T | null>` を返し、
- *          解決時にその呼び出しが最新世代なら `T`、そうでなければ `null`
+ * @returns `request(key) => Promise<T | null>`。最新世代の解決時のみ `T`、それ以外は `null`
  */
 export function createLatestByGeneration<T>(
   _load: (key: string) => Promise<T>,

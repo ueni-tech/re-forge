@@ -9,12 +9,20 @@
 // "[label #N] message" 形式の文字列を返す。
 
 /**
- * 【責務】（記述）
+ * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * `createLogger(label)` で一度 `logger` を作っておけば、ログを書きたい側は `message` を渡すだけで、ラベルと通し番号が自動で付いた一行が手に入る。
  *
- * 【ここで切る理由】（記述）
+ * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - `createLogger(label)` は `logger` を返す。
+ * - `logger(message)` を呼ぶたび、戻り値は `[label #N] message` 形式の文字列で、N はその `logger` に固有の通し番号として 1 から順に増える。
+ * - 別の `label` から作った `logger` どうしで番号は混ざらない（各 `logger` が独立した番号を持つ）。
  *
- * @param label - （記述）
- * @returns `log(message)` を返すクロージャ
+ * 【判断】（他の書き方と比べて、なぜこの形にした？）
+ * - 番号管理を `createLogger` を呼ぶ側に持たせると、ラベルごとに変数を作るコードが増えるので、ラベルとカウンタを `createLogger` 内に閉じる。
+ * - 却下案: モジュールスコープに `count` を置く。複数 `logger` で番号が混ざるため不採用。
+ *
+ * @param label `logger` が保持するメッセージラベル
+ * @returns `logger(message)` を返すクロージャ
  */
 export function createLogger(label: string): (message: string) => string {
   let count = 0;
