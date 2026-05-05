@@ -36,49 +36,86 @@ export type Action =
 
 /**
  * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * - 現在のstate とaction を渡すとaction のtype に応じてstate の内容が変更された新しいstate が返る
  *
  * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - action.typeがsetPreview: state.preview を action.index に置き換える（他フィールドはそのまま）。
+ * - action.typeがsetSlider: state.slider を action.index に置き換える（他フィールドはそのまま）。
+ * - action.typeがsetImages: state.base / state.mains を action の値で置き換える（preview / slider はその dispatch では変更しない）。
  *
  * 【判断】（他の書き方と比べて、なぜこの形にした？）
- * - 却下案: （他の書き方）→（この案だと何が困るか）ため不採用。
+ * - 可読性を優先するためswitch...case を採用
+ * - 却下案: if...else では可読性が下がるため不採用。
  *
- * @param _state - （記述）
- * @param _action - （記述）
+ * @param state - 画像ギャラリーの現在の状態のオブジェクト
+ * @param action - 処理名と各変更情報を組み合わせたオブジェクト
  * @returns 次の状態
  */
-export function reduce(_state: State, _action: Action): State {
-  throw new Error("not implemented");
+export function reduce(state: State, action: Action): State {
+  switch (action.type) {
+    case "setPreview":
+      return { ...state, preview: action.index };
+    case "setSlider":
+      return { ...state, slider: action.index };
+    case "setImages":
+      return { ...state, base: action.base, mains: action.mains };
+    default:
+      return state;
+  }
 }
 
 /**
  * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * - 渡したstate が条件通りの形になっていればtrue, なっていなければfalse が返ってくる
  *
  * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - mains が空なら preview===0 && slider===0
+ *   mains が非空なら 0 <= preview,slider < mains.length
  *
  * 【判断】（他の書き方と比べて、なぜこの形にした？）
- * - 却下案: （他の書き方）→（この案だと何が困るか）ため不採用。
+ * - 呼び出す側がstateの正しい条件を知らなくても結果を受け取れるようにするため
  *
- * @param _s - （記述）
+ * @param s - バリデーションチェックしたい状態
  * @returns 状態が仕様どおりか
  */
-export function isValidState(_s: State): boolean {
-  throw new Error("not implemented");
+export function isValidState(s: State): boolean {
+  if (s.mains.length === 0) {
+    return s.preview === 0 && s.slider === 0;
+  }
+
+  return (
+    s.preview >= 0 &&
+    s.preview < s.mains.length &&
+    s.slider >= 0 &&
+    s.slider < s.mains.length
+  );
 }
 
 /**
  * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * - applyVariationDispatch を呼ぶと3つのaction を正しい順番でdispatch する。
  *
  * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - コールバック（dispatch） に以下のアクションを順番に渡して実行する
+ *   1) preview を 0
+ *   2) slider を 0
+ *   3) base / mains を next で更新
  *
  * 【判断】（他の書き方と比べて、なぜこの形にした？）
- * - 却下案: （他の書き方）→（この案だと何が困るか）ため不採用。
+ * - applyVariationDispatch はdispatch の内容を知らなくてよい
+ * - applyVariationDispatch はaction の形とdispatchを実行する順にだけ責任を負う
+ * - そうすることで本番用の dispatch もテスト用の偽物も、呼び出す側が差し替えやすい。
+ * - 却下案: この関数の中にストアまわりの処理まで詰め込むと、同じようなコードが別の場所にも増えて、
+ *   あとから直すときに全部なおす羽目になりやすい。
  *
- * @param _dispatch - （記述）
- * @param _next - （記述）
+ * @param dispatch - action を受け取って実行する関数
+ * @param next - 次の状態
  */
 export function applyVariationDispatch(
-  _dispatch: (a: Action) => void,
-  _next: { base: string; mains: string[] },
+  dispatch: (a: Action) => void,
+  next: { base: string; mains: string[] },
 ): void {
-  throw new Error("not implemented");
+  dispatch({ type: "setPreview", index: 0 });
+  dispatch({ type: "setSlider", index: 0 });
+  dispatch({ type: "setImages", base: next.base, mains: next.mains });
 }
