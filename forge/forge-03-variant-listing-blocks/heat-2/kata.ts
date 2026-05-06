@@ -20,17 +20,27 @@ export type PathNode = { listingCode: string | null | undefined };
 
 /**
  * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * イベント経路の先頭（ターゲット側）から見て、最初の意味のあるlistingCode の値が得られる
  *
  * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * 渡された経路ノードの配列を先頭から見ていって、listingCode が
+ * null / undefined / 空文字でない最初のnodeのlistingCode の値が返ってくる
  *
  * 【判断】（他の書き方と比べて、なぜこの形にした？）
- * - 却下案: （他の書き方）→（この案だと何が困るか）ため不採用。
+ * - DOM の composed path と同様、先頭がイベントターゲット側である前提のため、
+ * 先頭から最初の非空 listingCode を採用する
  *
- * @param _path - （記述）
+ * @param path - 経路ノードの配列
  * @returns 最初に見つかった listing code、なければ null
  */
 export function firstListingCodeOnPath(
-  _path: readonly PathNode[],
+  path: readonly PathNode[],
 ): string | null {
-  throw new Error("not implemented");
+  for (const obj of path) {
+    const result = obj.listingCode;
+    if (result !== null && result !== undefined && result !== "") {
+      return result;
+    }
+  }
+  return null;
 }

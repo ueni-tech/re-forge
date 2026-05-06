@@ -21,21 +21,45 @@
 
 export type BlockRow = { listingCode: string; hidden: boolean };
 
+function hiddenFlagsForSelection(
+  blocks: BlockRow[],
+  listingCode: string,
+): void {
+  for (const block of blocks) {
+    block.hidden = block.listingCode !== listingCode;
+  }
+}
+
 /**
  * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * - blocks とnotify が設定済みのselectメソッドを持つオブジェクトを作ることができる
+ * - select関数 に出品コードを渡すとblocks 内を走査して出品コードと同じ値を持つBlockRow の表示（hiddenをfalse）と
+ * 更新ロジック（notify）を実行することができる
  *
  * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - createVariationSelectionSession: blocks とnotify が設定済みのselectメソッドを持つオブジェクトを返す
+ * - select: 受け取ったlistingCode からhiddenFlagsForSelection と同じ規則で各行の hidden を更新し、
+ * その後 notify({ listingCode }) を必ず1回呼ぶ
  *
  * 【判断】（他の書き方と比べて、なぜこの形にした？）
- * - 却下案: （他の書き方）→（この案だと何が困るか）ため不採用。
+ * - ファクトリにすることで呼び出し側がblocks とnotify を知る必要がなくなり責務の分離ができる
+ * - 却下案: 毎回`blocks`と`notfy` を渡す裸関数にすると呼び出しが冗長で通知漏れが起きやすいため不採用
  *
- * @param _blocks - （記述）
- * @param _notify - （記述）
+ * @param blocks - 走査対象のコードブロック
+ * @param notify - ブロック更新を知らせる通知ロジック
  * @returns `select` を持つセッションオブジェクト
  */
 export function createVariationSelectionSession(
-  _blocks: BlockRow[],
-  _notify: (detail: { listingCode: string }) => void,
+  blocks: BlockRow[],
+  notify: (detail: { listingCode: string }) => void,
 ): { select(listingCode: string): void } {
-  throw new Error("not implemented");
+  return {
+    select(listingCode) {
+      if (!blocks.some((block) => block.listingCode === listingCode)) {
+        return;
+      }
+      hiddenFlagsForSelection(blocks, listingCode);
+      notify({ listingCode });
+    },
+  };
 }
