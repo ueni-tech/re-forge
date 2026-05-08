@@ -69,3 +69,4 @@ npm run test:run
 | forge-02-gallery-sync | 商品ギャラリー: シグネチャ・非同期世代・dispatch 順 | 🔨 kata はスタブ／解答は `kata.solution.ts` |
 | forge-03-variant-listing-blocks | 出品コードバリエーション: hidden 配列・祖先パス・select+notify | 🔨 kata はスタブ／解答は `kata.solution.ts` |
 | forge-04-listing-variation-coordinator | listing variation: JSON マップ・初期コード・ギャラリー/カート同期の束ね | 🔨 kata はスタブ／解答は `kata.solution.ts` |
+| forge-05-listing-variation-loader | listing-variation.inc の TS 移植: JSON 読み込み・クエリ上書き・URL マップ生成・DI オーケストレーター | 🔨 kata はスタブ／解答は `kata.solution.ts` |
