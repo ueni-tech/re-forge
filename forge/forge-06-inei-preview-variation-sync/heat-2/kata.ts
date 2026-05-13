@@ -40,32 +40,51 @@ export type ScheduleSoonOptions = {
 
 /**
  * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * - 変更したいオブジェクトを渡したラベルの状態に合わせて書き換える
  *
  * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - targets.color が存在すれば targets.color.textContent = state.color を実行する
+ * - targets.font / targets.layout も同様に代入する
+ * - 対応する target が null または undefined のキーは何もしない
  *
  * 【判断】（他の書き方と比べて、なぜこの形にした？）
- * - 却下案: （他の書き方）→（この案だと何が困るか）ため不採用。
+ * - 明示的なif 3本にすることで読みやすくした
+ * - HTML 注入を避けるため innerHTML は不採用
  *
  * @param state - （記述）
  * @param targets - （記述）
  */
 export function syncLabels(state: LabelState, targets: LabelTargets): void {
-  // ここに実装する
-  throw new Error("not implemented");
+  if (!targets) return;
+  if (targets.color) targets.color.textContent = state.color;
+  if (targets.font) targets.font.textContent = state.font;
+  if (targets.layout) targets.layout.textContent = state.layout;
 }
 
 /**
  * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * - 呼び出しからコールバックを遅らせて実行することができる
  *
  * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - options.raf が渡されていればそれを使う（DI: テスト用差し替え口）
+ * - なければ typeof requestAnimationFrame === 'function' のとき requestAnimationFrame(fn)
+ * - どちらでもなければ setTimeout(fn, 0)
  *
  * 【判断】（他の書き方と比べて、なぜこの形にした？）
- * - 却下案: （他の書き方）→（この案だと何が困るか）ため不採用。
+ * - ガードの判断しやすさから早期リターンを採用
+ * - 分岐の中身が長くなるため else if は不採用
  *
  * @param fn - （記述）
  * @param options - （記述）
  */
 export function scheduleSoon(fn: () => void, options?: ScheduleSoonOptions): void {
-  // ここに実装する
-  throw new Error("not implemented");
+  if (options && options.raf) {
+    options.raf(fn);
+    return;
+  }
+  if (typeof requestAnimationFrame === 'function') {
+    requestAnimationFrame(fn);
+    return;
+  }
+  setTimeout(fn, 0);
 }
