@@ -70,3 +70,4 @@ npm run test:run
 | forge-03-variant-listing-blocks | 出品コードバリエーション: hidden 配列・祖先パス・select+notify | 🔨 kata はスタブ／解答は `kata.solution.ts` |
 | forge-04-listing-variation-coordinator | listing variation: JSON マップ・初期コード・ギャラリー/カート同期の束ね | 🔨 kata はスタブ／解答は `kata.solution.ts` |
 | forge-05-listing-variation-loader | listing-variation.inc の TS 移植: JSON 読み込み・クエリ上書き・URL マップ生成・DI オーケストレーター | 🔨 kata はスタブ／解答は `kata.solution.ts` |
+| forge-06-inei-preview-variation-sync | 印面プレビュー横ラベル同期: DOM 読み取りヘルパー・ラベル同期・scheduleSoon・DI コントローラ | 🔨 kata はスタブ／解答は `kata.solution.ts` |
