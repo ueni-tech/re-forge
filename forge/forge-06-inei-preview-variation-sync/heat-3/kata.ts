@@ -58,34 +58,70 @@ export type VariationSyncController = {
 
 /**
  * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * - imagesの最初の要素の base と main または thumb のパスが `${images.base}/${path}` の形式で返ってくる
  *
  * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - images / images.base / images.list が falsy か images.list.length === 0 のとき '' を返す
+ * - images.list[0].main を優先し、なければ images.list[0].thumb を path とする
+ * - path が空文字（または undefined）なら '' を返す
+ * - それ以外は `${images.base}/${path}` を返す
  *
  * 【判断】（他の書き方と比べて、なぜこの形にした？）
  * - 却下案: （他の書き方）→（この案だと何が困るか）ため不採用。
  *
- * @param images - （記述）
- * @returns （記述）
+ * @param images - 画像のベースURLと main, thumb のファイル名
+ * @returns `${images.base}/${path}` の形式 の文字列
  */
 export function firstImageUrl(images: ImageData | null | undefined): string {
-  // ここに実装する
-  throw new Error("not implemented");
+  if (!images || !images.base || !images.list || images.list.length === 0)
+    return "";
+  const path = images.list[0].main || images.list[0].thumb;
+  if (!path) return "";
+  return `${images.base}/${path}`;
 }
 
 /**
  * 【意図】（呼んだ人は何が嬉しい？／何が手に入る？）
+ * - DOM 依存を設定済みのバリデーション同期用の純粋なメソッドを持つオブジェクトが手に入る
  *
  * 【契約】（渡したものに対して、いつ何が起きる／起きない？）
+ * - controller.sync() — readState() の結果を writeLabels() へ即時渡す
+ * - controller.syncSoon() — schedule(() => sync()) を呼ぶ
+ * - controller.onPickerClick(target) — target.closest('[data-listing-code]') が
+ *   truthy のときだけ syncSoon() を呼ぶ（falsy なら何もしない）
+ * - controller.onImageListUpdated(detail) — firstImageUrl(detail.images) で URL を求め、
+ *   URL が '' でなく getThumbEl() が tagName === 'IMG' の要素を返すとき src を更新する
  *
  * 【判断】（他の書き方と比べて、なぜこの形にした？）
- * - 却下案: （他の書き方）→（この案だと何が困るか）ため不採用。
+ * - deps を外から渡すことでこの関数はオブジェクトを返すことに集中できる
+ * - 複数個所にコントローラーが欲しいときに内蔵型だとファクトリをコピーして差分を作りがちになるが、
+ *   注入型だと deps と同型のオブジェクトを作って同じファクトリで生成するだけで違うコントローラが手に入る
+ * - 却下案: deps を関数内に書くと保守性が下がるため不採用
  *
- * @param deps - （記述）
- * @returns （記述）
+ * @param deps - DOM に依存するプロパティ・メソッドを持つオブジェクト
+ * @returns DOM 依存を設定済みのバリデーション同期用の純粋なメソッドを持つオブジェクト
  */
 export function createVariationSyncController(
   deps: ControllerDeps,
 ): VariationSyncController {
-  // ここに実装する
-  throw new Error("not implemented");
+  return {
+    sync: function () {
+      deps.writeLabels(deps.readState());
+    },
+    syncSoon: function () {
+      deps.schedule(this.sync);
+    },
+    onPickerClick: function (target) {
+      if (target && target.closest("[data-listing-code]")) {
+        this.syncSoon();
+      }
+    },
+    onImageListUpdated: function (detail) {
+      const url = firstImageUrl(detail.images);
+      const thumb = deps.getThumbEl();
+      if (url !== "" && thumb && thumb.tagName === "IMG") {
+        thumb.src = url;
+      }
+    },
+  };
 }
