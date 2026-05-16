@@ -1,31 +1,61 @@
 # forge-05-listing-variation-loader — バリエーション JSON の読み込み・クエリ適用・URL マップ生成
 
 業務リポジトリ（hankoya）の **`_packages/lib/shop_item/listing_variation.inc`** から、
-**JSON エントリの検索**・**クエリパラメータによる初期コード上書き**・**data-goods-image-variations 用 URL マップ生成**・**オーケストレーション** の 4 処理を切り出した forge です。
+**JSON エントリの検索**・**クエリパラメータによる初期コード上書き**・**data-goods-image-variations 用 URL マップ生成**・**オーケストレーション** の 4 処理を切り出した forge。
 
-元の実装は PHP ですが、純粋な変換ロジックは TS で再現できます。  
-DOM・サーバー固有処理（`$_SERVER`、`require`、`exit` 等）は除き、環境依存は依存性注入に置き換えます。
+## 練習の進め方(2段階構成)
 
-## 実務との対応（読み返し用）
+この forge は「責務を自分で言語化する訓練」と「テストで答え合わせする学習」を両立させるため、2段階で進める。
 
-| heat | エッセンス | `listing_variation.inc` でのイメージ |
-|------|------------|--------------------------------------|
-| heat-1 | **JSON 配列からページキーでエントリを探す** — `variationSkus` と `defaultCode` を取り出す | `load_from_json_file()` |
-| heat-2 | **クエリ上書きと URL マップ生成** — 有効なコードなら `defaultCode` を上書き／コードごとに `baseUrl + code + ".html"` を組み立てる | `apply_listing_code_query()` + `build_goods_image_variations_json()` |
-| heat-3 | **DI 付きオーケストレーター** — JSON 読み込み → クエリ適用 → マップ生成 を 1 入口に束ね、バリエーションが空なら `null` を返す | `variation_prepare()` |
+### 段階A: 仕様起こし
 
-## 練習の進め方
+1. `heat-N/problem.md` を読む。**問題と入出力だけが書いてある。**
+2. `heat-N/kata.ts` を開く。関数シグネチャと JSDoc 雛形だけがある。
+3. **自分で契約を書く**。
+   - 入力が想定外のとき何を返すか
+   - エッジケースをどう扱うか
+   - 失敗時の挙動
+4. 契約に沿って実装する。
 
-1. `heat-N/kata.ts` は **未実装スタブ**（`throw new Error("not implemented")`）から始まる。`kata.test.ts` と README の表を頼りに **kata.ts だけを実装**する。
-2. 行き詰まったときだけ **`heat-N/kata.solution.ts`** を開き、仕様との対応を読む（写経より意図の理解を優先）。
-3. `npx vitest forge-05-listing-variation-loader` がすべてグリーンになるまで繰り返す。
+この段階では `spec.md` と `kata.test.ts` を**開かない**こと。自分の頭で仕様を決める訓練が目的。
+
+### 段階B: 答え合わせ
+
+5. `heat-N/spec.md` を開く。お題側が想定した仕様が書いてある。
+6. 自分の契約と spec.md を**突き合わせる**。
+   - 自分が考えなかったエッジケースは何か
+   - 自分が過剰に考えた部分はどこか
+   - 一致した部分は言語化が当たっている
+7. `npx vitest forge-05-listing-variation-loader` を実行する。
+8. テストで落ちた箇所を直しつつ、契約も更新する。
+
+### 解答との比較
+
+行き詰まったら **`heat-N/kata.solution.ts`** を開く。写経より意図の理解を優先。
 
 ```bash
 npx vitest forge-05-listing-variation-loader
 ```
 
+## heat構成
+
+| heat | エッセンス | `listing_variation.inc` でのイメージ |
+|------|------------|--------------------------------------|
+| heat-1 | **JSON 配列からページキーでエントリを探す** | `load_from_json_file()` |
+| heat-2 | **クエリ上書きと URL マップ生成** | `apply_listing_code_query()` + `build_goods_image_variations_json()` |
+| heat-3 | **DI 付きオーケストレーター** | `variation_prepare()` |
+
 ## あえて入れていないもの
 
-- ファイルシステム読み込み（`fs.readFile`）— ブラウザ／Node 共通で学べるよう、データは呼び出し元がパース済みの `unknown` として渡す。
-- `window.location` や `URLSearchParams` の直接参照 — heat-3 では `getParam` / `getBaseUrl` の関数を注入することでテスト可能にする。
-- バリエーションが空のときの 404 遷移（PHP の `exit`）— TS 版では `null` を返し、呼び出し元が判断する。
+- ファイルシステム読み込み(`fs.readFile`) — データは呼び出し元がパース済みの `unknown` として渡す。
+- `window.location` や `URLSearchParams` の直接参照 — heat-3 では `getParam` / `getBaseUrl` を注入する。
+- バリエーションが空のときの 404 遷移(PHP の `exit`) — TS 版では `null` を返し、呼び出し元が判断する。
+
+## JSDoc 雛形について
+
+雛形は「埋めるべきテンプレート」ではなく「**書く価値があるときの引き出し**」。書くことが無い項目は省略してよい。
+
+- **【意図】** 必須。呼ぶ側にとっての価値を1〜2行で。
+- **【契約】** 任意。型と問題文で表現できないことだけ書く。書き写しはしない。
+- **【設計の読解】** 任意。お題が指定した構造の意図を、自分の言葉で推論する。
+- **【実装メモ】** 任意。自分が迷った判断があれば書く。

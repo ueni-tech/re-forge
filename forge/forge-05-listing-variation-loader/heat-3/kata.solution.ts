@@ -1,4 +1,4 @@
-// [heat-3] 解答（閲覧・比較用）
+// [heat-3] 解答(閲覧・比較用)
 
 import type { VariationSku } from "../heat-1/kata.solution";
 import {
@@ -14,14 +14,14 @@ export type PrepareResult = {
 };
 
 export function prepareVariation(
-  _rawData: unknown,
-  _pageKey: string,
-  _getParam: (name: string) => string | null,
-  _getBaseUrl: () => string,
+  rawData: unknown,
+  pageKey: string,
+  getParam: (name: string) => string | null,
+  getBaseUrl: () => string,
 ): PrepareResult | null {
   const { variationSkus, defaultCode: initialCode } = loadPageVariation(
-    _rawData,
-    _pageKey,
+    rawData,
+    pageKey,
   );
 
   if (variationSkus.length === 0) return null;
@@ -29,12 +29,12 @@ export function prepareVariation(
   const defaultCode = applyListingCodeParam(
     variationSkus,
     initialCode,
-    _getParam("listing-code"),
+    getParam("listing-code"),
   );
 
   const variationsMap = buildGoodsImageVariationsMap(
     variationSkus,
-    _getBaseUrl(),
+    getBaseUrl(),
   );
 
   return { variationSkus, defaultCode, variationsMap };

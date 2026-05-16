@@ -1,68 +1,67 @@
 import { describe, it, expect } from "vitest";
-import { loadPageVariation } from "./kata";
+import { applyListingCodeParam, buildGoodsImageVariationsMap } from "./kata";
 
-const sampleData = [
-  {
-    sample: {
-      defaultCode: "ST-TKV-A2",
-      variationSkus: [
-        { code: "ST-TKV-A1", label: "白" },
-        { code: "ST-TKV-A2", label: "黒" },
-        { code: "ST-TKV-A3", label: "茶" },
-      ],
-    },
-  },
-  {
-    nokey: {
-      defaultCode: "",
-      variationSkus: [
-        { code: "PR-MUG-001", label: "S" },
-        { code: "PR-MUG-002", label: "M" },
-      ],
-    },
-  },
-  {
-    puge: {
-      defaultCode: "AC-PEN-RD",
-      variationSkus: [
-        { code: "AC-PEN-RD", label: "赤" },
-        { code: "AC-PEN-BK", label: "黒" },
-      ],
-    },
-  },
+const skus = [
+  { code: "ST-TKV-A1", label: "白" },
+  { code: "ST-TKV-A2", label: "黒" },
+  { code: "ST-TKV-A3", label: "茶" },
 ];
 
-describe("[heat-1] loadPageVariation", () => {
-  it("ページキーが一致するエントリの variationSkus と defaultCode を返す", () => {
-    const result = loadPageVariation(sampleData, "sample");
-    expect(result.variationSkus).toEqual([
-      { code: "ST-TKV-A1", label: "白" },
-      { code: "ST-TKV-A2", label: "黒" },
-      { code: "ST-TKV-A3", label: "茶" },
-    ]);
-    expect(result.defaultCode).toBe("ST-TKV-A2");
+describe("[heat-2] applyListingCodeParam", () => {
+  it("requestedCode が variationSkus に含まれるとき requestedCode を返す", () => {
+    expect(applyListingCodeParam(skus, "ST-TKV-A2", "ST-TKV-A3")).toBe(
+      "ST-TKV-A3",
+    );
   });
 
-  it("defaultCode が空文字のとき variationSkus 先頭の code を defaultCode に使う", () => {
-    const result = loadPageVariation(sampleData, "nokey");
-    expect(result.defaultCode).toBe("PR-MUG-001");
-    expect(result.variationSkus).toHaveLength(2);
+  it("requestedCode が variationSkus に含まれないとき defaultCode を返す", () => {
+    expect(applyListingCodeParam(skus, "ST-TKV-A2", "INVALID-CODE")).toBe(
+      "ST-TKV-A2",
+    );
   });
 
-  it("ページキーが存在しない場合、空の variationSkus と空文字の defaultCode を返す", () => {
-    const result = loadPageVariation(sampleData, "nonexistent");
-    expect(result.variationSkus).toEqual([]);
-    expect(result.defaultCode).toBe("");
+  it("requestedCode が null / undefined / 空文字のとき defaultCode を返す", () => {
+    expect(applyListingCodeParam(skus, "ST-TKV-A2", null)).toBe("ST-TKV-A2");
+    expect(applyListingCodeParam(skus, "ST-TKV-A2", undefined)).toBe(
+      "ST-TKV-A2",
+    );
+    expect(applyListingCodeParam(skus, "ST-TKV-A2", "")).toBe("ST-TKV-A2");
   });
 
-  it("data が配列でない場合（null・オブジェクト）、空値を返す", () => {
-    expect(loadPageVariation(null, "sample")).toEqual({
-      variationSkus: [],
-      defaultCode: "",
+  it("コードは完全一致で判定する（前後スペースは一致しない）", () => {
+    expect(applyListingCodeParam(skus, "ST-TKV-A2", " ST-TKV-A1")).toBe(
+      "ST-TKV-A2",
+    );
+  });
+});
+
+describe("[heat-2] buildGoodsImageVariationsMap", () => {
+  it("各 code をキーに baseUrl + code + '.html' の path を持つマップを返す", () => {
+    const map = buildGoodsImageVariationsMap(
+      skus,
+      "https://www.hankoya.com/shop/item/sample/",
+    );
+    expect(map["ST-TKV-A1"]).toEqual({
+      path: "https://www.hankoya.com/shop/item/sample/ST-TKV-A1.html",
     });
-    expect(loadPageVariation({ sample: {} }, "sample")).toEqual({
-      variationSkus: [],
-      defaultCode: "",
+    expect(map["ST-TKV-A3"]).toEqual({
+      path: "https://www.hankoya.com/shop/item/sample/ST-TKV-A3.html",
     });
+    expect(Object.keys(map)).toHaveLength(3);
+  });
+
+  it("variationSkus が空なら空オブジェクトを返す", () => {
+    expect(buildGoodsImageVariationsMap([], "https://example.com/")).toEqual(
+      {},
+    );
+  });
+
+  it("code が空文字のエントリはスキップする", () => {
+    const withEmpty = [{ code: "" }, { code: "ST-TKV-A1" }];
+    const map = buildGoodsImageVariationsMap(
+      withEmpty,
+      "https://example.com/",
+    );
+    expect(Object.keys(map)).toEqual(["ST-TKV-A1"]);
   });
 });

@@ -5,8 +5,12 @@ function makeStorage(): Storage & { data: Map<string, string> } {
   const data = new Map<string, string>();
   return {
     data,
-    get(key) { return data.get(key); },
-    set(key, value) { data.set(key, value); },
+    get(key) {
+      return data.get(key);
+    },
+    set(key, value) {
+      data.set(key, value);
+    },
   };
 }
 
@@ -34,10 +38,16 @@ describe("[heat-3] createAsyncCacheLoader", () => {
 
   it("未キャッシュなら fetcher が呼ばれ storage に保存される", () => {
     const storage = makeStorage();
-    const mockFetcher = vi.fn((_key: string, delay: number, cb: (r: string) => void) => {
-      setTimeout(() => cb("fetched:user"), delay);
-    });
-    const load = createAsyncCacheLoader(storage, ["user"], mockFetcher as typeof fakeFetch);
+    const mockFetcher = vi.fn(
+      (_key: string, delay: number, cb: (r: string) => void) => {
+        setTimeout(() => cb("fetched:user"), delay);
+      },
+    );
+    const load = createAsyncCacheLoader(
+      storage,
+      ["user"],
+      mockFetcher as typeof fakeFetch,
+    );
     const results: string[] = [];
     load("user", 100, (r) => results.push(r));
     vi.advanceTimersByTime(100);
@@ -47,10 +57,16 @@ describe("[heat-3] createAsyncCacheLoader", () => {
 
   it("2回目以降はキャッシュから返し fetcher を呼ばない", () => {
     const storage = makeStorage();
-    const mockFetcher = vi.fn((_key: string, delay: number, cb: (r: string) => void) => {
-      setTimeout(() => cb("fetched:product"), delay);
-    });
-    const load = createAsyncCacheLoader(storage, ["product"], mockFetcher as typeof fakeFetch);
+    const mockFetcher = vi.fn(
+      (_key: string, delay: number, cb: (r: string) => void) => {
+        setTimeout(() => cb("fetched:product"), delay);
+      },
+    );
+    const load = createAsyncCacheLoader(
+      storage,
+      ["product"],
+      mockFetcher as typeof fakeFetch,
+    );
     const results: string[] = [];
     load("product", 50, (r) => results.push(r));
     vi.advanceTimersByTime(50);

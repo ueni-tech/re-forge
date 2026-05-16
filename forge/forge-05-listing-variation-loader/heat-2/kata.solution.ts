@@ -1,4 +1,4 @@
-// [heat-2] 解答（閲覧・比較用）
+// [heat-2] 解答(閲覧・比較用)
 
 import type { VariationSku } from "../heat-1/kata.solution";
 

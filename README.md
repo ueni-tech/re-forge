@@ -5,22 +5,51 @@
 ## コンセプト
 
 - **forge** — 実務コードから抽出した1つのパターン・テーマ
-- **heat** — 同じパターンを抽象度を上げながら実装する段階（heat-1 → heat-2 → heat-3）
+- **heat** — 同じパターンを抽象度を上げながら実装する段階(heat-1 → heat-2 → heat-3)
+
+## 学習目的
+
+re-forge の本質は **「責務を自分で言語化する訓練」** だ。コードを書けるようになることは副産物にすぎない。
+
+このため、各 heat は2段階で進める。
+
+### 段階A: 仕様起こし
+
+1. `heat-N/problem.md` を読む。**問題と入出力だけが書いてある。**
+2. `heat-N/kata.ts` を開く。関数シグネチャと JSDoc 雛形だけがある。
+3. **自分で契約を書く。**
+   - 入力が想定外のときの挙動
+   - エッジケース
+   - 例外を投げるか投げないか
+4. 契約に沿って実装する。
+
+この段階では `spec.md` と `kata.test.ts` を**開かない**こと。自分の頭で仕様を決める訓練が目的。
+
+### 段階B: 答え合わせ
+
+5. `heat-N/spec.md` を開く。お題側が想定した仕様と、設計の解説が書いてある。
+6. **自分の契約と突き合わせる。**
+   - 自分が考えなかったエッジケースは何か
+   - 自分が過剰に考えた部分はどこか
+7. `npx vitest <パス>` を実行する。
+8. テストで落ちた箇所を直しつつ、契約も更新する。
+
+### 解答との比較
+
+行き詰まったら `heat-N/kata.solution.ts` を開く。写経より意図の理解を優先。
 
 ## ディレクトリ構成
 
 ```
 re-forge/
-└── forge-01-closure/
-    ├── heat-1/
-    │   ├── kata.ts       ← 実装
-    │   └── kata.test.ts  ← テスト
-    ├── heat-2/
-    │   ├── kata.ts
-    │   └── kata.test.ts
-    └── heat-3/
-        ├── kata.ts
-        └── kata.test.ts
+└── forge-NN-name/
+    ├── README.md           ← forge全体の概要と heat 構成
+    └── heat-N/
+        ├── problem.md      ← 問題と入出力のみ(段階A)
+        ├── spec.md         ← 想定仕様と設計解説(段階B)
+        ├── kata.ts         ← 関数シグネチャと軽量JSDoc雛形
+        ├── kata.test.ts    ← テスト(段階Bまで開かない)
+        └── kata.solution.ts ← 解答(行き詰まったとき用)
 ```
 
 ## セットアップ
@@ -31,7 +60,7 @@ npm install
 
 ## テストの実行
 
-### 特定の forge だけ走らせる（推奨）
+### 特定の forge だけ走らせる(推奨)
 
 ```bash
 npx vitest forge-01-closure
@@ -49,26 +78,131 @@ npx vitest forge-01-closure/heat-1
 npm test
 ```
 
-### 1回だけ実行（watch なし）
+### 1回だけ実行(watch なし)
 
 ```bash
 npm run test:run
 ```
 
-## 進め方
+## JSDoc雛形について
 
-1. `kata.ts` の `throw new Error("not implemented")` を実装に置き換える
-2. `npx vitest <パス>` でテストを走らせて確認する
-3. 全テストがグリーンになったら次の heat へ
+雛形は「埋めるべきテンプレート」ではなく「**書く価値があるときの引き出し**」。書くことが無い項目は省略してよい。
+
+- **【意図】** 必須。呼ぶ側にとっての価値を1〜2行で。
+- **【契約】** 任意。型と問題文で表現できないことだけ書く。書き写しはしない。
+- **【設計の読解】** 任意。お題が指定した構造の意図を、自分の言葉で推論する。
+- **【実装メモ】** 任意。自分が迷った判断があれば書く。
+
+---
+
+## AI向け: 新しい forge を作るときの仕様
+
+このリポジトリで新しい forge を追加する際は、以下の構造とルールに従うこと。
+
+### ファイル構成(必須)
+
+各 heat に以下の5ファイルを置く。
+
+```
+heat-N/
+├── problem.md         # 段階Aで読む。問題と入出力だけを書く
+├── spec.md            # 段階Bで読む。想定仕様と設計解説を書く
+├── kata.ts            # 関数シグネチャと軽量JSDoc雛形のみ
+├── kata.test.ts       # テスト(内容は spec.md と整合させる)
+└── kata.solution.ts   # 解答
+```
+
+forge ディレクトリ直下にも `README.md` を置き、heat 構成と実務コードとの対応を書く。
+
+### problem.md の書き方
+
+含めるべきセクション:
+
+1. **実務での使われ方** — 実コードのどこから抽出したか
+2. **やりたいこと** — 1〜2文で何を作るか
+3. **入出力** — 関数シグネチャと引数の意味
+4. **あなたが決めること** — 学習者が自分で判断すべき問いを箇条書きで列挙
+5. **進め方** — 段階A→Bの手順
+
+**書いてはいけないこと:**
+
+- ✗ 仕様の番号付き箇条書き(① ② ③ ...で挙動を全部書く)
+- ✗ 「null のとき何を返す」を答えとして書く
+- ✗ エッジケースの正解を書く
+
+これらは spec.md に書く。problem.md には**問い**だけを書く。
+
+### spec.md の書き方
+
+含めるべきセクション:
+
+1. **想定仕様** — 番号付きで挙動を明記(従来の problem コメントの中身に相当)
+2. **自分の契約と比較する観点** — 自分の判断と想定仕様の差分を観察するための問い
+3. **観察ポイント** — そこに含まれる設計パターンの解説
+
+「正解」ではなく「**第三者の視点**」として機能させる。学習者の判断と突き合わせる対話の相手になるよう書く。
+
+### kata.ts の書き方
+
+```ts
+// [heat-N] (簡潔なタイトル)
+//
+// 仕様は problem.md を参照。
+// 行き詰まったら kata.solution.ts を参照。
+
+// 型定義(必要なら)
+export type Foo = { ... };
+
+/**
+ * 【意図】呼ぶ側にとっての価値を1〜2行で(必須)
+ *  -
+ *
+ * 【契約】型と問題文で表現できないことだけ書く(任意)
+ *  -
+ *
+ * 【設計の読解】お題が指定した型・構造の意図(任意・自明なら省略)
+ *  -
+ *
+ * 【実装メモ】自分が迷った判断(任意・迷いがなければ省略)
+ *  -
+ *
+ * @param ...
+ */
+export function xxx(...): ... {
+  throw new Error("not implemented");
+}
+```
+
+**重要なルール:**
+
+- 仕様コメント(① ② ③ ...) を kata.ts に書かない。すべて problem.md と spec.md に分離する。
+- JSDocの【意図】以外のセクションは空欄で渡す(学習者が埋める枠)。
+- 解答例を JSDoc に書かない。
+
+### kata.solution.ts の書き方
+
+最終的な実装コードと、必要なら短い解説コメント。JSDoc は最小限で良い。
+
+### 設計判断の難所がある場合
+
+heat の主題が「DI」や「非同期」など、設計判断の難所を含む場合は、problem.md の **「あなたが決めること」** セクションでその判断を学習者に明示的に投げる。
+
+例:
+
+> - なぜ `window.location` を直接呼ばずに引数で受けるか、自分なりの仮説を立ててから実装する
+
+spec.md ではその判断の背後にある設計原則を解説する。
+
+---
 
 ## forge 一覧
 
 | forge | テーマ | ステータス |
 |---|---|---|
-| forge-01-closure | クロージャ / request sequencing | 🔨 進行中 |
-| forge-02-gallery-sync | 商品ギャラリー: シグネチャ・非同期世代・dispatch 順 | 🔨 kata はスタブ／解答は `kata.solution.ts` |
-| forge-03-variant-listing-blocks | 出品コードバリエーション: hidden 配列・祖先パス・select+notify | 🔨 kata はスタブ／解答は `kata.solution.ts` |
-| forge-04-listing-variation-coordinator | listing variation: JSON マップ・初期コード・ギャラリー/カート同期の束ね | 🔨 kata はスタブ／解答は `kata.solution.ts` |
-| forge-05-listing-variation-loader | listing-variation.inc の TS 移植: JSON 読み込み・クエリ上書き・URL マップ生成・DI オーケストレーター | 🔨 kata はスタブ／解答は `kata.solution.ts` |
-| forge-06-inei-preview-variation-sync | 印面プレビュー横ラベル同期: DOM 読み取りヘルパー・ラベル同期・scheduleSoon・DI コントローラ | 🔨 kata はスタブ／解答は `kata.solution.ts` |
-| forge-07-basket-param-prefill | カートパラメーター事前入力: DOM 収集・安全な JSON パース・正規表現・Strategy パターン・DI initForm | 🔨 kata はスタブ／解答は `kata.solution.ts` |
+| forge-01-closure | クロージャ / キャッシュパターン | ✅ 新設計版 |
+| forge-02-gallery-sync | 商品ギャラリー: シグネチャ・非同期世代・dispatch 順 | 旧形式・要移行 |
+| forge-03-variant-listing-blocks | 出品コードバリエーション | 旧形式・要移行 |
+| forge-04-listing-variation-coordinator | listing variation 同期 | 旧形式・要移行 |
+| forge-05-listing-variation-loader | listing-variation.inc の TS 移植 | 旧形式・要移行 |
+| forge-06-inei-preview-variation-sync | 印面プレビュー横ラベル同期 | 旧形式・要移行 |
+| forge-07-basket-param-prefill | カートパラメーター事前入力 | 旧形式・要移行 |

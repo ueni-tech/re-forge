@@ -28,7 +28,7 @@ describe("[heat-2] applyListingCodeParam", () => {
     expect(applyListingCodeParam(skus, "ST-TKV-A2", "")).toBe("ST-TKV-A2");
   });
 
-  it("コードは完全一致で判定する（前後スペースは一致しない）", () => {
+  it("コードは完全一致で判定する(前後スペースは一致しない)", () => {
     expect(applyListingCodeParam(skus, "ST-TKV-A2", " ST-TKV-A1")).toBe(
       "ST-TKV-A2",
     );

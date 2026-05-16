@@ -30,7 +30,7 @@ describe("[heat-2] createTTLCache", () => {
     cache.get("k1", f1);
     vi.advanceTimersByTime(300);
     cache.get("k2", f2);
-    vi.advanceTimersByTime(300); // k1: 計600ms（期限切れ）、k2: 計300ms（有効）
+    vi.advanceTimersByTime(300); // k1: 計600ms(期限切れ)、k2: 計300ms(有効)
     cache.get("k1", f1);
     cache.get("k2", f2);
     expect(f1).toHaveBeenCalledTimes(2);

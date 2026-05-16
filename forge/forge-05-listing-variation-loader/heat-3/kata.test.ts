@@ -52,7 +52,7 @@ describe("[heat-3] prepareVariation", () => {
     expect(result!.defaultCode).toBe("ST-TKV-A2");
   });
 
-  it("variationSkus が空（キー不一致）のとき null を返す", () => {
+  it("variationSkus が空(キー不一致)のとき null を返す", () => {
     const result = prepareVariation(
       rawData,
       "nonexistent",
