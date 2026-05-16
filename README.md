@@ -205,4 +205,4 @@ spec.md ではその判断の背後にある設計原則を解説する。
 | forge-04-listing-variation-coordinator | listing variation 同期 | 旧形式・要移行 |
 | forge-05-listing-variation-loader | listing-variation.inc の TS 移植 | 旧形式・要移行 |
 | forge-06-inei-preview-variation-sync | 印面プレビュー横ラベル同期 | 旧形式・要移行 |
-| forge-07-basket-param-prefill | カートパラメーター事前入力 | 旧形式・要移行 |
+| forge-07-basket-param-prefill | カートパラメーター事前入力 | ✅ 新設計版 |
