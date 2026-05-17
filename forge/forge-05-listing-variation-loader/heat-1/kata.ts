@@ -26,7 +26,8 @@ export type PageVariation = {
  *  - 必ず PageVariation を返すことで後続の処理は呼び出し側に任せる
  *
  * 【実装メモ】自分が迷った判断(任意・迷いがなければ省略)
- *  -
+ *  - 元のオブジェクトを破壊しないように新しいオブジェクトを返すという判断ができなかった。
+ *  - for ... of が「ループの最後の処理で上書きされる」ことに気付かず使っていた。
  *
  * @param data - listing-variations.json をパースした値
  * @param pageKey - 探したいページキー
