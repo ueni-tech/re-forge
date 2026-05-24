@@ -67,14 +67,18 @@ export type PrepareResult = {
 
 /**
  * 【意図】呼ぶ側にとっての価値を1〜2行で(必須)
- *  - 呼び出し側は「3つの関数を順に呼ぶ」と書かない。意図を書く。
+ *  - 商品詳細ページのコントローラが1回呼ぶだけで
+ *  variationSkus / defaultCode / variationsMap を受け取れる
  *
- * 【契約】型と問題文で表現できないことだけ書く(任意)
- *  -
+ * 【契約】4問(正常時 / 困った入力 / しないこと / 暗黙の決め)への答え。型で表せないことだけ(任意)
+ *  - 正常時: variationSkus / defaultCode / variationsMap をまとめて返す
+ *  - JSON 由来のバリエーションが空（または pageKey 不一致） → null (空の PrepareResult は返さない)
+ *  - getParam("listing-code") が null または variationSkus に無い code → 返却する defaultCode は JSON 由来の初期値のまま（クエリで上書きしない）
+ *  - 例外は投げない（不正 JSON・不正クエリは吸収して null またはフォールバック）
  *
  * 【設計の読解】お題が指定した型・構造の意図(任意・自明なら省略)
- *  - getParam / getBaseUrl を関数として注入する設計の意図は?
- *  - 戻り値が null になり得る設計の意図は?
+ *  - getParam / getBaseUrl を引数にして window 依存を外し、テストと責務の可視化を両立する
+ *  - null は「このページ用バリエーションが存在しない」を呼び出し元に委ねる
  *
  * 【実装メモ】自分が迷った判断(任意)
  *  -
@@ -90,5 +94,22 @@ export function prepareVariation(
   getParam: (name: string) => string | null,
   getBaseUrl: () => string,
 ): PrepareResult | null {
-  throw new Error("not implemented");
+  const pageVariation: PageVariation = loadPageVariation(rawData, pageKey);
+  const variationSkus = pageVariation.variationSkus;
+  const initialCode = pageVariation.defaultCode;
+
+  if (variationSkus.length === 0) return null;
+
+  const defaultCode = applyListingCodeParam(
+    variationSkus,
+    initialCode,
+    getParam("listing-code"),
+  );
+
+  const variationsMap = buildGoodsImageVariationsMap(
+    variationSkus,
+    getBaseUrl(),
+  );
+
+  return { variationSkus, defaultCode, variationsMap };
 }
