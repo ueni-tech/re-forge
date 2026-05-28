@@ -40,6 +40,28 @@ param[ST-TKV-A2][template][1][sha_name_2font2]
 - 4階層目 = `templateName`（`prefillData[listingCode]` の内側キー）
 - 2階層目・3階層目はこの関数の責務では使わない
 
+## 合意済み仕様（この heat で握る挙動）
+
+### `parsePrefillData(raw)`
+
+- `raw` が falsy（`null` / `undefined` / `""`）のとき `undefined` を返す
+- `JSON.parse` に失敗したとき `undefined` を返す（例外は外に出さない）
+- 成功時はパース済みオブジェクトを `PrefillData` として返す（ランタイムの形状検証は行わない）
+
+### `getPrefillValue(el, prefillData)`
+
+- `el` が `null` / `undefined` のとき `undefined` を返す
+- `el.name` が `undefined` / `""` のとき `undefined` を返す
+- `el.name` が次の正規表現にマッチしないとき `undefined` を返す
+
+```
+/^param\[([^\]]+)\]\[[^\]]*\]\[[^\]]*\]\[([^\]]+)\]$/
+```
+
+  - `match[1] = listingCode`、`match[2] = templateName`
+- `prefillData[listingCode]` または `prefillData[listingCode][templateName]` が存在しないとき `undefined` を返す
+- 上記をすべて満たすとき `prefillData[listingCode][templateName]` を返す
+
 ## あなたが決めること
 
 実装する前に、自分で以下を決めて JSDoc の【契約】に書く:

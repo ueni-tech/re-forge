@@ -59,6 +59,15 @@ class OrderItems {
 }
 ```
 
+## 合意済み仕様（この heat で握る挙動）
+
+- `new OrderItems(items?)`: 初期配列を **防衛コピー** して保持する
+- `add(item)`: 上限到達は例外。元のインスタンスは変更せず新しいインスタンスを返す
+- `totalAmount()`: 空のとき 0。`price * quantity` の合計を返す
+- `count()`: 内部配列の長さを返す
+- `hasHighPriceItem()`: 5000円以上の単価が含まれるか。空のときは false
+- `toSnapshot()`: `readonly OrderItem[]` 型で返す（型レベルでの保護）
+
 ## あなたが決めること
 
 実装する前に、自分で以下を決めて JSDoc の【契約】と【設計の読解】に書く:

@@ -2,25 +2,10 @@
 
 **注意: kata.ts を実装してから開くこと。**
 
-## 想定仕様
+## 仕様の一次ソース
 
-### `getStrategyKey(el)`
-
-① `el.type` が `"radio"` または `"checkbox"` のとき `"checked"` を返す。
-
-② それ以外（`"text"` や `undefined` など）のとき `"default"` を返す。
-
-### `initForm(form, prefillData)`
-
-① `form` が `null` / `undefined` のとき何もしない（return）。例外は投げない。
-
-② `prefillData` が `null` / `undefined` のとき何もしない（return）。
-
-③ `form.querySelectorAll('[name^="param["]')` で対象要素を取得する。
-
-④ 各要素について `getPrefillValue(el, prefillData)` で値を取り出す。
-
-⑤ 値が取れた要素のみ、`applyStrategies[getStrategyKey(el)] ?? applyStrategies.default` で適用する。
+この heat の「合意済み仕様（握る挙動）」は `problem.md` に明記されている。
+`spec.md` は仕様そのものではなく、設計の観察ポイント・判断の背景・代替案の比較を担う。
 
 ## 自分の契約と比較する観点
 

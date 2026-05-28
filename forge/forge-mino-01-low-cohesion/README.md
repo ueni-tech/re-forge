@@ -9,7 +9,7 @@
 各 heat は2段階構成。詳細はリポジトリ直下の README を参照。
 
 1. **段階A**: `problem.md` だけ読んで `kata.ts` を実装する
-2. **段階B**: `spec.md` を開いて自分の判断と突き合わせ、テストを通す
+2. **段階B**: `spec.md` を開いて設計の観察ポイントを読み、自分の判断と突き合わせ、テストを通す
 
 ```bash
 npx vitest forge-mino-01-low-cohesion

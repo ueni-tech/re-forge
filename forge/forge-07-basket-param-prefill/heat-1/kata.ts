@@ -2,6 +2,7 @@
 //
 // 仕様は problem.md を参照。
 // 行き詰まったら kata.solution.ts を参照。
+// NOTE: この heat の合意済み仕様（一次ソース）は problem.md に明記されている。
 
 // 最小インターフェース型（変更不要）
 export type CollectableElement = {
@@ -13,7 +14,7 @@ export type CollectableElement = {
 
 /**
  * 【意図】呼ぶ側にとっての価値を1〜2行で(必須)
- *  -
+ *  - 
  *
  * 【契約】4問(正常時 / 困った入力 / しないこと / 暗黙の決め)への答え。型で表せないことだけ(任意)
  *  -

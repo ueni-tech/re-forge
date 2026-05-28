@@ -2,19 +2,10 @@
 
 **注意: kata.ts を実装してから開くこと。**
 
-## 想定仕様
+## 仕様の一次ソース
 
-① `new OrderItems(items?)`: 初期配列を **防衛コピー** して保持。
-
-② `add(item)`: 上限到達は例外。元のインスタンスは変更せず新しいインスタンスを返す。
-
-③ `totalAmount`: 空のとき 0。`price * quantity` の合計。
-
-④ `count`: 内部配列の長さ。
-
-⑤ `hasHighPriceItem`: 5000円以上の単価が含まれるか。空のときは false。
-
-⑥ `toSnapshot`: `readonly OrderItem[]` 型で返す。型レベルでの保護。
+この heat の「合意済み仕様（握る挙動）」は `problem.md` に明記されている。
+`spec.md` は仕様そのものではなく、設計の観察ポイント・判断の背景・代替案の比較を担う。
 
 ## 自分の契約と比較する観点
 

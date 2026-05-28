@@ -2,21 +2,10 @@
 
 **注意: kata.ts を実装してから開くこと。**
 
-## 想定仕様
+## 仕様の一次ソース
 
-① `new Stock(quantity, limit)`:
-- 負の値は例外
-- `quantity > limit` は例外(不正な組み合わせを許さない)
-
-② `add(amount)`: 上限を超える追加は例外。元の Stock は変更しない。
-
-③ `reserve(amount)`: 在庫不足は例外。元の Stock は変更しない。
-
-④ `canAdd / canReserve`: 例外を投げず boolean を返す。事前判定用。
-
-⑤ `isEmpty`: `quantity === 0` のとき true。
-
-⑥ `add / reserve` への負の amount は例外(`canAdd / canReserve` は単に false を返す)。
+この heat の「合意済み仕様（握る挙動）」は `problem.md` に明記されている。
+`spec.md` は仕様そのものではなく、設計の観察ポイント・判断の背景・代替案の比較を担う。
 
 ## 自分の契約と比較する観点
 

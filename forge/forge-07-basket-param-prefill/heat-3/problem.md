@@ -55,6 +55,21 @@ const applyStrategies: Record<string, (el: PrefillableElement, val: string) => v
 };
 ```
 
+## 合意済み仕様（この heat で握る挙動）
+
+### `getStrategyKey(el)`
+
+- `el.type` が `"radio"` または `"checkbox"` のとき `"checked"` を返す
+- それ以外（`"text"` や `undefined` など）のとき `"default"` を返す
+
+### `initForm(form, prefillData)`
+
+- `form` が `null` / `undefined` のとき何もしない（例外は投げない）
+- `prefillData` が `null` / `undefined` のとき何もしない
+- `form.querySelectorAll('[name^="param["]')` で対象要素を取得する
+- 各要素について `getPrefillValue(el, prefillData)` で値を取り出す
+- 値が取れた要素のみ、`applyStrategies[getStrategyKey(el)] ?? applyStrategies.default` で適用する
+
 ## あなたが決めること
 
 実装する前に、自分で以下を決めて JSDoc の【契約】に書く:

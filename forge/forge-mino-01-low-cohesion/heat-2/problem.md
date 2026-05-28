@@ -51,6 +51,17 @@ class Stock {
 }
 ```
 
+## 合意済み仕様（この heat で握る挙動）
+
+- `new Stock(quantity, limit)`:
+  - 負の値は例外
+  - `quantity > limit` は例外（不正な組み合わせを許さない）
+- `add(amount)`: 上限を超える追加は例外。元の `Stock` は変更せず新しい `Stock` を返す
+- `reserve(amount)`: 在庫不足は例外。元の `Stock` は変更せず新しい `Stock` を返す
+- `canAdd` / `canReserve`: 例外を投げず boolean を返す（事前判定用）
+- `isEmpty`: `quantity === 0` のとき true
+- `add` / `reserve` への負の amount は例外（`canAdd` / `canReserve` は単に false を返す）
+
 ## あなたが決めること
 
 実装する前に、自分で以下を決めて JSDoc の【契約】と【設計の読解】に書く:

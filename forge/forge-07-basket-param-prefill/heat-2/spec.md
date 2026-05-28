@@ -2,33 +2,10 @@
 
 **注意: kata.ts を実装してから開くこと。**
 
-## 想定仕様
+## 仕様の一次ソース
 
-### `parsePrefillData(raw)`
-
-① `raw` が falsy (`null` / `undefined` / `""`) のとき `undefined` を返す。
-
-② `JSON.parse` に失敗したとき `undefined` を返す（例外は外に出さない）。失敗の事実は `console.warn` などでログに残してもよい。
-
-③ 成功時はパース済みオブジェクトを `PrefillData` として返す。**ランタイムの形状検証は行わない**。
-
-### `getPrefillValue(el, prefillData)`
-
-① `el` が `null` / `undefined` のとき `undefined`。
-
-② `el.name` が `undefined` / `""` のとき `undefined`。
-
-③ `el.name` が正規表現
-
-```
-/^param\[([^\]]+)\]\[[^\]]*\]\[[^\]]*\]\[([^\]]+)\]$/
-```
-
-にマッチしないとき `undefined`。`match[1] = listingCode`、`match[2] = templateName`。
-
-④ `prefillData[listingCode]` または `prefillData[listingCode][templateName]` が存在しないとき `undefined`。
-
-⑤ 上記をすべてパスしたとき `prefillData[listingCode][templateName]` を返す。
+この heat の「合意済み仕様（握る挙動）」は `problem.md` に明記されている。
+`spec.md` は仕様そのものではなく、設計の観察ポイント・判断の背景・代替案の比較を担う。
 
 ## 自分の契約と比較する観点
 
