@@ -1,0 +1,51 @@
+# buildAttributes
+
+難易度: ★★☆
+
+属性名と値のオブジェクトから、HTML タグに差し込める属性文字列を組み立てる関数を書く。値は必ずエスケープする。
+
+> **背景**: レガシーコードの `'<a href="' + url + '">'` は、`url` に `"` が混入するとタグ構造を壊す（属性ブレイクアウト型 XSS）。属性を組み立てる処理を1箇所に集約し、値を必ずエスケープすることで防ぐ。
+
+## 関数
+
+```ts
+function buildAttributes(attrs: Record<string, string>): string
+```
+
+## 仕様
+
+- 各エントリを ` 名前="値"` の形にする（**先頭に半角スペース1つ**）。
+- 値は HTML エスケープする（`&` `<` `>` `"` `'` の5文字。変換表は heat-1 と同じ）。
+- 複数の属性はオブジェクトの**挿入順**に連結する。
+- 空オブジェクトのときは空文字 `""` を返す。
+
+先頭スペースを含めるのは `` `<div${buildAttributes(attrs)}>` `` のようにそのまま埋め込めるようにするため。
+
+## 例
+
+出力は分かりやすさのためシングルクォートで囲って示す（先頭スペースに注目）。
+
+```ts
+buildAttributes({ class: "card", "data-id": "42" })
+// ' class="card" data-id="42"'
+
+buildAttributes({ title: 'a "b"' })
+// ' title="a &quot;b&quot;"'
+
+buildAttributes({ href: "/p?id=1&c=2" })
+// ' href="/p?id=1&amp;c=2"'
+
+buildAttributes({})
+// ''
+```
+
+## 制約
+
+- 値は任意の文字列（空文字を含む）。空文字の値も ` name=""` として出力する（属性ごと省略はしない）。
+- 属性名はそのまま使う（エスケープ不要）。
+
+## 進め方
+
+```bash
+npx vitest forge-10-safe-html/heat-2
+```
