@@ -240,5 +240,5 @@ spec.md ではその判断の背後にある設計原則を解説する。
 | forge-06-inei-preview-variation-sync | 印面プレビュー横ラベル同期 | 旧形式・要移行 |
 | forge-07-basket-param-prefill | カートパラメーター事前入力 | ✅ 新設計版 |
 | forge-08-factory-init-closure | 初期化ファクトリ / DOM キャプチャクロージャ | ✅ 新設計版 |
-| forge-09-form-validation-rules | フォーム検証: ルールの純関数化・合成・スキーマ駆動 | ✅ 新設計版 |
+| forge-09-form-validation-rules | フォーム検証: ルールの純関数化・合成・スキーマ駆動 / 競技プログラミング形式 | ✅ 簡素版 |
 | forge-10-safe-html | HTML 生成の安全化（XSS）/ 競技プログラミング形式 | ✅ 簡素版 |

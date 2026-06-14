@@ -21,3 +21,14 @@ export function pattern(regex: RegExp, message: string): Validator {
   return (value) =>
     value !== "" && !regex.test(value) ? { ok: false, message } : OK;
 }
+
+// ── 設計メモ 参考回答（汎用4問 × この kata）──────────────
+// A1. 境界: required は空文字も空白のみも NG（trim して判定）。
+//     maxLength と pattern は空文字を OK にし、未入力判定を required に集約。
+// A2. 保証/しないこと: OK/NG を結果型で返すだけ。例外を投げず、alert・DOM・
+//     ログなどの副作用は一切持たない（判定と通知を分離する）。
+// A3. なぜこの書き方: message と設定をクロージャに閉じ、戻り値を同じ
+//     Validator 型に揃えた。boolean ではなく結果型なのは、ルールと表示文言を
+//     一体で持ち運び、判定と文言のズレを型で防ぐため。
+// A4. 再利用: 3つとも同じ Validator 型なので配列に並べられる（heat-2 で合成）。
+// ──────────────────────────────────────────────
