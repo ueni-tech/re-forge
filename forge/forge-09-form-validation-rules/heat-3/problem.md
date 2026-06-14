@@ -6,7 +6,7 @@
 
 > **背景**: 「配送先が別住所のときだけ住所必須」のような条件付きルールを、神 `validate()` の if ネストではなく**スキーマ（データ）**で宣言し、それを解釈するエンジンを1つ書く。
 
-## 関数
+## 与えられた型（`kata.ts` に定義済み）
 
 ```ts
 type ValidationResult = { ok: true } | { ok: false; message: string };
@@ -21,9 +21,11 @@ type FieldSchema = {
 };
 
 type FormErrors = Record<string, string>;             // フィールド名 → 最初のエラー
-
-function validateForm(values: FormValues, schema: FieldSchema[]): FormErrors;
 ```
+
+## 実装する関数
+
+上の型を使い、`validateForm` を自分で宣言・実装する。**シグネチャ（引数・戻り値の型）は自分で設計する**（`export` する名前は固定）。何を引数に取り何を返すかは下の「仕様」と「例」から読み取って決める。
 
 ## 仕様
 

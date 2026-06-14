@@ -30,5 +30,5 @@ export function pattern(regex: RegExp, message: string): Validator {
 // A3. なぜこの書き方: message と設定をクロージャに閉じ、戻り値を同じ
 //     Validator 型に揃えた。boolean ではなく結果型なのは、ルールと表示文言を
 //     一体で持ち運び、判定と文言のズレを型で防ぐため。
-// A4. 再利用: 3つとも同じ Validator 型なので配列に並べられる（heat-2 で合成）。
+// A4. 役割分担: 3つとも同じ Validator 型なので配列に並べられる（heat-2 で合成）。
 // ──────────────────────────────────────────────

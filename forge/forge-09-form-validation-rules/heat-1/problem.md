@@ -6,18 +6,22 @@
 
 > **背景**: 老舗EC の `if (name == '') { alert('...'); return false; }` という神 `validate()` から、**検証ルールだけ**を純関数として取り出す。alert も DOM 取得もしない。
 
-## 関数
+## 与えられた型（`kata.ts` に定義済み）
 
 ```ts
 type ValidationResult = { ok: true } | { ok: false; message: string };
 type Validator = (value: string) => ValidationResult;
-
-function required(message: string): Validator;
-function maxLength(max: number, message: string): Validator;
-function pattern(regex: RegExp, message: string): Validator;
 ```
 
-各ファクトリは「値を1つ受け取り `ValidationResult` を返す関数」を返す。
+## 実装する関数
+
+上の型を使い、次の3つのファクトリを自分で宣言・実装する。**シグネチャ（引数・戻り値の型）は自分で設計する**（`export` する名前は固定）。
+
+- `required` — 必須チェックのバリデータを作る
+- `maxLength` — 文字数上限チェックのバリデータを作る
+- `pattern` — 正規表現による形式チェックのバリデータを作る
+
+各ファクトリが何を引数に取り何を返すかは、下の「仕様」と「例」から読み取って決める。
 
 ## 仕様
 

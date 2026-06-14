@@ -6,13 +6,15 @@
 
 > **背景**: 老舗EC の商品一覧で `html += '<li><a href="' + p.url + '">' + p.name + '</a></li>'` と組み立てている処理の安全版。名前や URL にユーザー由来の文字列が混ざっても壊れない・差し込まれない形にする。
 
-## 関数
+## 与えられた型（`kata.ts` に定義済み）
 
 ```ts
 type Product = { name: string; url: string };
-
-function renderProductList(products: Product[]): string
 ```
+
+## 実装する関数
+
+上の型を使い、`renderProductList` を自分で宣言・実装する。**シグネチャ（引数・戻り値の型）は自分で設計する**（`export` する名前は固定）。何を引数に取り何を返すかは下の「仕様」と「例」から読み取って決める。
 
 ## 仕様
 
