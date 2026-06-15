@@ -40,3 +40,34 @@ export type FormErrors = Record<string, string>;
 // --- 実装 ---
 // problem.md のシグネチャに従って validateForm を自分で宣言・実装する。
 // 引数・戻り値の型を自分で設計するのが狙い（export 名はテストに合わせる）。
+
+// フィールドの実入力とスキーマを受け取って、実入力をスキーマで検証する
+// 検証NGだけ FormErrors に詰めていって返す
+// 全部OKなら FormErrors は空。よって {} が返る
+
+export function validateForm(values: FormValues, schema: FieldSchema[]) {
+  const error = {};
+
+  // whenが false の field は何もしない
+  // 各rulesを validator として実行
+  // 実行結果の ok が false なら field.name と message を error に詰める
+  // error を返す
+
+  schema.forEach((field) => {
+    for (const key in values) {
+      if (key === field.name) {
+        if (key === "when") {
+        }
+        for (const validator of field.rules) {
+          const result = validator(values[key]);
+          if (!result.ok) {
+            error[key] = result.message;
+            break;
+          }
+        }
+      }
+    }
+  });
+
+  return error;
+}
