@@ -25,3 +25,32 @@ export type Product = { name: string; url: string };
 // --- 実装 ---
 // problem.md のシグネチャに従って renderProductList を自分で宣言・実装する。
 // 引数・戻り値の型を自分で設計するのが狙い（export 名はテストに合わせる）。
+
+export function renderProductList(products: Product[]): string{
+  // 外側のulは固定
+  // liのビルダーを作る
+  //  name, url をエスケープして同名の変数に格納
+  //  テンプレートリテラルに埋め込み
+  //  ulにappendChild
+  // li ビルダーを products の要素分ループする
+  // html を返却する
+  const regex = /[&<>"']/g;
+  const escapeMap: Record<string, string> =  {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  };
+  const outerHTML = document.createElement("ul");
+
+  function escapeHTML(html: string){
+    html.replace(regex, function(match) {
+      return escapeMap[match];
+    });
+  }
+  
+  function listBuilder(product: Product) {
+    const escapedName = escapeHTML(product.name);
+  }
+}
