@@ -21,13 +21,21 @@ export type ComboState = {
 
 /**
  * 【意図】呼ぶ側にとっての価値を1〜2行で(必須)
- *  -
+ *  - SKU テーブルの1行を、ピッカーが保持する ComboState に変換する。
  *
  * 【契約】4問(正常時 / 困った入力 / しないこと / 暗黙の決め)への答え。型で表せないことだけ(任意)
- *  -
+ *  - 正常時: label は必須。ballDiameter / engrabingLines は truthy ならコピー
+ *  - 困った入力: 軸がない・空文字のときはそのプロパティを省略
+ *  - しないこと: sku を変更しない。wrapping / saleStatus / code はコピーしない
+ *  - 暗黙の決め: `if (sku.ballDiameter)` で truthy 判定。未設定軸はプロパティ省略。
+ *  engravingLines: "0" のときは有効な値としてコピーする
  *
  * @param sku - variationSkus の1行
  */
 export function stateFromSku(sku: VariationSku): ComboState {
-  throw new Error("not implemented");
+  const result: ComboState = { label: sku.label };
+  if (sku.ballDiameter) result.ballDiameter = sku.ballDiameter;
+  if (sku.engravingLines) result.engravingLines = sku.engravingLines;
+
+  return result;
 }
