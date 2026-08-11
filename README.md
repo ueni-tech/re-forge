@@ -242,3 +242,8 @@ spec.md ではその判断の背後にある設計原則を解説する。
 | forge-08-factory-init-closure | 初期化ファクトリ / DOM キャプチャクロージャ | ✅ 新設計版 |
 | forge-09-form-validation-rules | フォーム検証: ルールの純関数化・合成・スキーマ駆動 / 競技プログラミング形式 | ✅ 簡素版 |
 | forge-10-safe-html | HTML 生成の安全化（XSS）/ 競技プログラミング形式 | ✅ 簡素版 |
+| forge-11-lgom-layout-parser | LGOM レイアウト文字列パーサー | ✅ 新設計版 |
+| forge-12-combo-state-patch | 多軸バリエーション: stateFromSku / patchState / resolveSku | ✅ 新設計版 |
+| forge-13-sku-combo-exists | 多軸バリエーション: 組み合わせ存在判定・軸値収集 | ✅ 新設計版 |
+| forge-14-axis-fallback | 多軸バリエーション: pickMinAxisValue / applyAxisFallbacks | ✅ 新設計版 |
+| forge-15-aggregate-sale-status | 多軸バリエーション: 部分フィルタ + 販売ステータス集約 | ✅ 新設計版 |
