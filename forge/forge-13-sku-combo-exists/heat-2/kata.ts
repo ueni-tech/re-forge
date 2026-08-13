@@ -18,14 +18,19 @@ export type ComboState = {
 };
 
 /**
- * （何のための関数か。1文。関数名の言い換えはしない）
+ * 行数ボタンを hidden するため、選択中の色、径と行数の組み合わせが sku にあるか調べる
  *
- * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
+ * 判定する行数は state ではなく第3引数。行数ボタンの値をループして渡される想定。
  */
 export function hasLinesForStateColorDiameter(
   state: ComboState,
   variationSkus: VariationSku[],
   engravingLines: string | null,
 ): boolean {
-  throw new Error("not implemented");
+  return variationSkus.some((sku) => {
+    if (state.label !== sku.label) return false;
+    if (state.ballDiameter !== undefined && state.ballDiameter !== sku.ballDiameter) return false;
+    if (engravingLines !== sku.engravingLines) return false;
+    return true;
+  });
 }

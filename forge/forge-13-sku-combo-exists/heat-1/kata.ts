@@ -18,14 +18,16 @@ export type ComboState = {
 };
 
 /**
- * （何のための関数か。1文。関数名の言い換えはしない）
+ * 径ボタンをhiddenにするため、選択中の色とその組み合わせが sku にあるか調べる
  *
- * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
+ * 判定する径は state ではなく第3引数。各径ボタンの値をループで渡す。
  */
 export function hasDiameterForStateColor(
   state: ComboState,
   variationSkus: VariationSku[],
   ballDiameter: string | null,
 ): boolean {
-  throw new Error("not implemented");
+  return variationSkus.some(
+    (sku) => sku.label === state.label && sku.ballDiameter === ballDiameter,
+  );
 }
