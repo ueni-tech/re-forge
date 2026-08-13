@@ -12,26 +12,32 @@ export type VariationSku = {
 };
 
 /**
- * （何のための関数か。1文。関数名の言い換えはしない）
- *
- * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
+ * フォールバック先の径を決定するために選択中の色の行の径を集める
  */
-export function collectDiametersForLabel(
-  variationSkus: VariationSku[],
-  label: string,
-): string[] {
-  throw new Error("not implemented");
+export function collectDiametersForLabel(variationSkus: VariationSku[], label: string): string[] {
+  const matched: string[] = [];
+  variationSkus.forEach((sku) => {
+    if (sku.label === label && sku.ballDiameter) {
+      matched.push(sku.ballDiameter);
+    }
+  });
+  return matched;
 }
 
 /**
- * （何のための関数か。1文。関数名の言い換えはしない）
- *
- * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
+ * フォールバック先の行数を決定するために指定中の色と径の組み合わせに一致する行の行数を集める
  */
 export function collectLinesForLabelDiameter(
   variationSkus: VariationSku[],
   label: string,
   ballDiameter: string | undefined,
 ): string[] {
-  throw new Error("not implemented");
+  const matched: string[] = [];
+  variationSkus.forEach((sku) => {
+    if (sku.label !== label) return;
+    if (sku.ballDiameter !== undefined && sku.ballDiameter !== ballDiameter) return;
+    if (!sku.engravingLines) return;
+    matched.push(sku.engravingLines);
+  });
+  return matched;
 }
