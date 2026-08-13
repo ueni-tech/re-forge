@@ -1,43 +1,36 @@
 # [heat-2] マッチ行から代表販売ステータスを選ぶ
 
-## 実務での使われ方
+## 背景
 
-フィルタ後の複数 SKU 行に対し、ピッカーボタンに付ける **1つの saleStatus** を決める。**在庫あり(3)が1件でもあれば "3"** を優先。
+フィルタ後の複数 SKU 行に対し、ピッカーボタンに付ける saleStatus を1つ決める。在庫あり（3）が1件でもあれば `"3"` を優先する。`dataset.saleStatus` は文字列。
 
-## やりたいこと
+## やること
 
 `pickSaleStatusFromMatches(matched)` を実装する。
 
-## 合意済み仕様（この heat で握る挙動）
+## 受け入れ条件
 
 - `matched.length === 0` → `undefined`
-- `matched` のいずれか1行でも `saleStatus === 3` → **`"3"`** を返す（即 return）
-- それ以外 → **先頭行** の `saleStatus` を文字列化して返す
-  - `saleStatus` が falsy（0 含む）→ **`"0"`**
+- いずれか1行でも `saleStatus === 3` → `"3"` を返す（即 return してよい）
+- それ以外 → 先頭行の `saleStatus` を文字列化して返す
+  - `saleStatus` が falsy（0 含む）→ `"0"`
 - 入力配列は変更しない
+- フィルタはしない。最大値を取るのでもない
 
-## 入出力
+## 型
 
 ```ts
 function pickSaleStatusFromMatches(matched: VariationSku[]): string | undefined;
 ```
 
-## あなたが決めること
+## 実装者が決めること
 
-- 在庫優先を **for ループ** で書くか `some` + 別処理か
-- 戻り値を **string** に統一する理由（`dataset.saleStatus` は文字列）
+受け入れ条件を満たす範囲で、次は任せる。
 
-## JSDoc【契約】を書く考え方
-
-### この heat への当てはめ（問いのみ）
-
-- **正常時**: 在庫行あり / なし
-- **困った入力**: 空配列、先頭が saleStatus 0
-- **しないこと**: フィルタ、最大値を取る
-- **暗黙の決め**: 3 優先、 tie-break は先頭行
+- 在庫優先を for ループで書くか、`some` と先頭行参照に分けるか
 
 ## 進め方
 
-1. `problem.md` のみで実装
+1. このチケットだけ読んで `kata.ts` を実装する。JSDoc はチケットを蒸留する（書き方はリポジトリ直下 README）
 2. `spec.md` で答え合わせ
-3. `npx vitest forge-15-aggregate-sale-status/heat-2`
+3. `npx vitest forge-15-aggregate-sale-status/heat-2` でテストを通す

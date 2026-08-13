@@ -20,18 +20,30 @@ export type ComboState = {
 };
 
 /**
- * 【意図】呼ぶ側にとっての価値を1〜2行で(必須)
- *  -
+ * ピッカーの軸状態から listingCode に渡す sku 行を1つ確定する
  *
- * 【契約】4問への答え(任意)
- *  -
+ * 値が undefined の軸では絞らない。複数一致は先頭。無効組み合わせの補正はしない。
  *
- * @param state - 軸の選択状態
- * @param variationSkus - バリエーション SKU 一覧
+ * @param state 軸の選択状態
+ * @param variationSkus バリエーション SKU 一覧
  */
 export function resolveSku(
   state: ComboState,
   variationSkus: VariationSku[],
 ): VariationSku | undefined {
-  throw new Error("not implemented");
+  return variationSkus.find((sku) => {
+    if (state.label !== sku.label) {
+      return false;
+    }
+    if (state.ballDiameter !== undefined && state.ballDiameter !== sku.ballDiameter) {
+      return false;
+    }
+    if (state.engravingLines !== undefined && state.engravingLines !== sku.engravingLines) {
+      return false;
+    }
+    if (state.wrapping !== undefined && state.wrapping !== sku.wrapping) {
+      return false;
+    }
+    return true;
+  });
 }

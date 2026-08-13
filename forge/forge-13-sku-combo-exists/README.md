@@ -6,6 +6,8 @@ hankoya の `listing-variation-combo-logic.ts` / `listing-variation-combo-entry.
 
 ## 練習の進め方
 
+`problem.md` は **仕様書・チケット** として読む。JSDoc の書き方はチケットに書かない。チケットから、コードの隣に残す最小限を自分で蒸留する。
+
 ```bash
 npx vitest forge-13-sku-combo-exists
 ```

@@ -1,16 +1,21 @@
 # [heat-3] フィルタと集約を合成する aggregateSaleStatus
 
-## 実務での使われ方
+## 背景
 
-`syncColorButtons` / `syncDiameterButtons` / `syncLinesButtons` はすべて `aggregateSaleStatus` を **引数の個数だけ変えて** 呼ぶ。内部は heat-1 + heat-2 の合成。
+`syncColorButtons` / `syncDiameterButtons` / `syncLinesButtons` はすべて `aggregateSaleStatus` を、引数の個数だけ変えて呼ぶ。内部は heat-1 + heat-2 の合成。
 
-## やりたいこと
+## やること
 
-`aggregateSaleStatus` を実装する。
+`aggregateSaleStatus` を実装する。heat-1/2 を同ファイルに再実装してもよい。推奨は `filterMatchedSkus` と `pickSaleStatusFromMatches` を呼び出して合成する。
 
-heat-1/2 を **同ファイル内に再実装してもよい** が、推奨は `filterMatchedSkus` と `pickSaleStatusFromMatches` を **呼び出して合成** する。
+## 受け入れ条件
 
-## 合意済み仕様（この heat で握る挙動）
+- 未指定引数は `null` 相当（その軸で絞らない）
+- `filterMatchedSkus` → `pickSaleStatusFromMatches` の結果を返す
+- `variationSkus` が falsy のとき → `undefined`
+- DOM は更新しない
+
+## 型
 
 ```ts
 function aggregateSaleStatus(
@@ -21,26 +26,15 @@ function aggregateSaleStatus(
 ): string | undefined;
 ```
 
-- 未指定引数は **`null` 相当**（その軸で絞らない）
-- `filterMatchedSkus` → `pickSaleStatusFromMatches` の結果を返す
-- `variationSkus` が falsy のとき → `undefined`
+## 実装者が決めること
 
-## あなたが決めること
+受け入れ条件を満たす範囲で、次は任せる。
 
-- heat-1/2 の関数を **import せず同ファイルに書く** か **再利用** か
+- heat-1/2 の関数を同ファイルに書くか、このファイル内で再利用するか
 - デフォルト引数 `= null` を使うか
-
-## JSDoc【契約】を書く考え方
-
-### この heat への当てはめ（問いのみ）
-
-- **正常時**: 色だけ / 色×径 / 全軸
-- **困った入力**: 0件マッチ、falsy skus
-- **しないこと**: DOM 更新
-- **暗黙の決め**: 合成の順序
 
 ## 進め方
 
-1. `problem.md` のみで実装（heat-1/2 完了済みなら合成に集中）
+1. このチケットだけ読んで `kata.ts` を実装する。JSDoc はチケットを蒸留する（書き方はリポジトリ直下 README）。heat-1/2 が済んでいれば合成に集中する
 2. `spec.md` で答え合わせ
-3. `npx vitest forge-15-aggregate-sale-status/heat-3`
+3. `npx vitest forge-15-aggregate-sale-status/heat-3` でテストを通す

@@ -12,8 +12,9 @@ export type VariationSku = {
 };
 
 /**
- * 【意図】
- *  -
+ * （何のための関数か。1文。関数名の言い換えはしない）
+ *
+ * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
  */
 export function collectDiametersForLabel(
   variationSkus: VariationSku[],
@@ -23,8 +24,9 @@ export function collectDiametersForLabel(
 }
 
 /**
- * 【意図】
- *  -
+ * （何のための関数か。1文。関数名の言い換えはしない）
+ *
+ * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
  */
 export function collectLinesForLabelDiameter(
   variationSkus: VariationSku[],

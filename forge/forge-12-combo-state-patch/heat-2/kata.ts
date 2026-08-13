@@ -11,15 +11,17 @@ export type ComboState = {
 };
 
 /**
- * 【意図】呼ぶ側にとっての価値を1〜2行で(必須)
- *  -
+ * ピッカーの選択状態を、変えた軸だけ上書きする。
  *
- * 【契約】4問への答え(任意)
- *  -
+ * 渡したオブジェクトをその場で書き換える。値が `undefined` のキーは触らず、空文字は書き込む。
  *
- * @param state - 更新対象（ミュートされる）
- * @param patch - 更新情報
+ *
+ * @param state 更新対象（このオブジェクトを書き換える）
+ * @param patch 触りたい軸だけの部分更新
  */
 export function patchState(state: ComboState, patch: Partial<ComboState>): void {
-  throw new Error("not implemented");
+  if (patch.label !== undefined) state.label = patch.label;
+  if (patch.ballDiameter !== undefined) state.ballDiameter = patch.ballDiameter;
+  if (patch.engravingLines !== undefined) state.engravingLines = patch.engravingLines;
+  if (patch.wrapping !== undefined) state.wrapping = patch.wrapping;
 }

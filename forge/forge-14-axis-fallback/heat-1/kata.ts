@@ -4,11 +4,9 @@
 // 行き詰まったら kata.solution.ts を参照。
 
 /**
- * 【意図】
- *  -
+ * （何のための関数か。1文。関数名の言い換えはしない）
  *
- * 【契約】
- *  -
+ * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
  */
 export function pickMinAxisValue(values: string[]): string | undefined {
   throw new Error("not implemented");

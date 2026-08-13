@@ -1,62 +1,39 @@
 # [heat-2] 部分更新パッチで軸状態を更新する
 
-## 実務での使われ方
+## 背景
 
-ピッカーボタンクリック時、`listing-variation-combo-entry.ts` は `patchState(state, { ballDiameter })` のように **同じ state オブジェクトを更新し続ける**。
+多軸ピッカーは、ボタンクリックのたびに **同じ state オブジェクト** を更新し続ける（`listing-variation-combo-entry.ts`）。React の setState のように新しいオブジェクトを返すのではなく、ミュータブルに書き換える。
 
-React の setState とは違い、ミュータブルな state を使う。パッチで「変えたい軸だけ」を渡す。
+呼び出し側は `patchState(state, { ballDiameter })` のように、**変えたい軸だけ** を渡す。
 
-## やりたいこと
+## やること
 
-`ComboState` と部分更新オブジェクト `Partial<ComboState>` を受け取り、**state をその場で更新する** `patchState` を実装する。
+`patchState(state, patch)` を実装する。
 
-## 合意済み仕様（この heat で握る挙動）
+## 受け入れ条件
 
-- パッチの各キーについて、値が **`undefined` のときはスキップ**（既存値を維持）
-- 値が **`undefined` 以外**（空文字 `""` を含む）のとき、そのキーを state に書き込む
-- 戻り値は **`void`**（state をミュートする）
+- パッチの値が `undefined` のキーはスキップする（既存値を維持する）
+- `undefined` 以外（空文字 `""` を含む）は、そのキーを state に書き込む
 - パッチに無いキーは変更しない
+- 戻り値は `void`。渡された `state` をその場で書き換える（新しいオブジェクトは返さない）
 
-## 入出力
+## 型
 
 ```ts
 function patchState(state: ComboState, patch: Partial<ComboState>): void;
 ```
 
-## あなたが決めること
+`ComboState` は kata.ts を参照。
 
-### undefined vs 省略
+## 実装者が決めること
 
-- `patchState(state, { ballDiameter: undefined })` は径を消すのか、維持するのか?
-- 合意仕様は **スキップ = 維持**。「軸を消したい」要件は別 API が必要
+受け入れ条件を満たす範囲で、次は任せる。
 
-### ループの書き方
-
-- `Object.keys(patch)` を回すか、固定キーを列挙するか?
-- 動的に回すと将来 `ComboState` にキーが増えても追随できる
-
-### 型安全な書き込み
-
-- `(state as Record<...>)[key] = value` のようなキャストが必要になることがある。なぜか?
-
-## JSDoc【契約】を書く考え方
-
-| # | 質問 |
-|---|------|
-| 1 | **正常時** — パッチ1キー更新後、他キーはどうなる？ |
-| 2 | **困った入力** — 空パッチ、`undefined` 値、空文字の値 |
-| 3 | **しないこと** — 新オブジェクトを返す？ 例外を投げる？ |
-| 4 | **暗黙の決め** — undefined スキップ、空文字は上書き |
-
-### この heat への当てはめ（問いのみ）
-
-- **正常時**: `{ label: "赤" }` に `{ ballDiameter: "0.7" }` を当てる
-- **困った入力**: `{ ballDiameter: undefined }`、空パッチ `{}`
-- **しないこと**: state の参照を差し替える？
-- **暗黙の決め**: 空文字 `"0.5"` は有効な更新か
+- キーの適用は `Object.keys(patch)` で回すか、固定キーを列挙するか
+- `Object.keys` にする場合、TypeScript の書き込みでキャストが必要になることがある
 
 ## 進め方
 
-1. このファイルだけ読んで `kata.ts` を実装する
+1. このチケットだけ読んで `kata.ts` を実装する。JSDoc はチケットを蒸留する（書き方はリポジトリ直下 README）
 2. `spec.md` で答え合わせ
 3. `npx vitest forge-12-combo-state-patch/heat-2` でテストを通す

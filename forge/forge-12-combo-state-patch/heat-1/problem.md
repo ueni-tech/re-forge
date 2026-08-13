@@ -1,24 +1,25 @@
 # [heat-1] SKU 行からピッカー用の軸状態を作る
 
-## 実務での使われ方
+## 背景
 
-多軸バリエーション（`listing-variation-combo-entry.ts`）では、ページ初期化時に JSON から `listingCode` に一致する SKU 行を探し、その行の情報を**ピッカーの選択状態**として保持する。
+多軸バリエーション（`listing-variation-combo-entry.ts`）は、ページ初期化時に JSON から `listingCode` に一致する SKU 行を探し、その行を **ピッカーの選択状態** として持つ。
 
-`stateFromSku` は「SKU テーブルの1行 → ピッカーが持つ state オブジェクト」への変換を担う。
+`stateFromSku` は「SKU テーブルの1行 → ピッカーが持つ state」への変換。
 
-## やりたいこと
+## やること
 
-`VariationSku` の1行を受け取り、`ComboState` を返す `stateFromSku` を実装する。
+`stateFromSku(sku)` を実装する。
 
-## 合意済み仕様（この heat で握る挙動）
+## 受け入れ条件
 
-- 返す `ComboState` には **必ず `label`** を含める（`sku.label` をそのまま使う）
-- `sku.ballDiameter` が **truthy** のときだけ `state.ballDiameter` にコピーする
-- `sku.engravingLines` が **truthy** のときだけ `state.engravingLines` にコピーする
-- **`wrapping` は state に含めない**（この heat の state 組み立てでは扱わない）
-- 入力 SKU を変更しない（副作用なし）
+- 返す `ComboState` には必ず `label` を含める（`sku.label` をそのまま使う）
+- `sku.ballDiameter` が truthy のときだけ `state.ballDiameter` にコピーする
+- `sku.engravingLines` が truthy のときだけ `state.engravingLines` にコピーする
+- `wrapping` は state に載せない
+- 入力の `sku` は変更しない
+- 毎回 **新しいオブジェクト** を返す
 
-## 入出力
+## 型
 
 ```ts
 type VariationSku = {
@@ -40,40 +41,15 @@ type ComboState = {
 function stateFromSku(sku: VariationSku): ComboState;
 ```
 
-## あなたが決めること
+## 実装者が決めること
 
-### truthy 判定
+受け入れ条件を満たす範囲で、次は任せる。
 
-- `ballDiameter: ""` や `engravingLines: "0"` のとき、コピーするか?
-- 実務では空文字の軸は「未設定」とみなす。`if (sku.ballDiameter)` でよいか?
-
-### 返却オブジェクトの形
-
-- 未設定の軸は **プロパティ自体を省略** するか、**`undefined` を明示** するか?
-- どちらでもテスト上は同等だが、後続の `resolveSku` では「undefined = この軸では絞り込まない」と読む。省略と undefined を混在させない方がよい
-
-### 新規オブジェクト vs ミュータブル
-
-- 毎回新しいオブジェクトを返すか? 呼び出し側が state を保持し続ける前提で、**返却は常に新規** とする
-
-## JSDoc【契約】を書く考え方
-
-| # | 質問 |
-|---|------|
-| 1 | **正常時** — 各軸が揃った SKU からどんな state が返る？ |
-| 2 | **困った入力** — 径・行数が無い SKU、空文字の軸 |
-| 3 | **しないこと** — 入力 SKU を変更する？ wrapping をコピーする？ |
-| 4 | **暗黙の決め** — truthy 判定、省略 vs undefined |
-
-### この heat への当てはめ（問いのみ）
-
-- **正常時**: label + ballDiameter + engravingLines がある行
-- **困った入力**: 径だけ無い行、行数だけ無い行
-- **しないこと**: `sku` のプロパティを書き換える？
-- **暗黙の決め**: 空文字をコピーするか省略するか
+- 未設定の軸はプロパティごと省略するか、`undefined` を明示するか（混在は避ける）
+- truthy 判定で `""` と `"0"` がどうなるかは、受け入れ条件の「truthy のときだけ」に従う
 
 ## 進め方
 
-1. このファイルだけ読んで `kata.ts` を実装する
-2. 実装が終わったら `spec.md` を開いて自分の判断と突き合わせる
+1. このチケットだけ読んで `kata.ts` を実装する。JSDoc はチケットを蒸留する（書き方はリポジトリ直下 README）
+2. `spec.md` で答え合わせ
 3. `npx vitest forge-12-combo-state-patch/heat-1` でテストを通す

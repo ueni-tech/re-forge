@@ -1,28 +1,30 @@
 # [heat-1] 部分指定で SKU 行をフィルタする
 
-## 実務での使われ方
+## 背景
 
-`aggregateSaleStatus` は、ボタンごとに **指定した軸だけ** で SKU を絞る。未指定の軸は `null` を渡し「ワイルドカード」にする。
+`aggregateSaleStatus` は、ボタンごとに指定した軸だけで SKU を絞る。未指定の軸は `null` を渡し、ワイルドカードにする。
 
-## やりたいこと
+## やること
 
 `filterMatchedSkus` を実装する。
 
-## 合意済み仕様（この heat で握る挙動）
+## 受け入れ条件
 
-各引数が **`null` のとき** → その軸では **絞り込まない**  
-**`null` 以外** のとき → 次の条件で **一致必須**:
+各引数が `null` のとき → その軸では絞り込まない。  
+`null` 以外のとき → 次の条件で一致必須:
 
 | 引数 | 一致条件 |
 |------|----------|
-| `label` | `row.label` が truthy **かつ** `row.label === label` |
-| `ballDiameter` | `row.ballDiameter` が truthy **かつ** `row.ballDiameter === ballDiameter` |
-| `engravingLines` | `row.engravingLines` が truthy **かつ** `row.engravingLines === engravingLines` |
+| `label` | `row.label` が truthy かつ `row.label === label` |
+| `ballDiameter` | `row.ballDiameter` が truthy かつ `row.ballDiameter === ballDiameter` |
+| `engravingLines` | `row.engravingLines` が truthy かつ `row.engravingLines === engravingLines` |
 
-- すべての指定条件を満たした行だけ返す（**順序は入力配列順を維持**）
+- すべての指定条件を満たした行だけ返す（入力配列の順を維持）
 - `variationSkus` が falsy のとき → `[]` を返す
+- 入力配列は変更しない
+- `saleStatus` の集計はこの関数の責務ではない
 
-## 入出力
+## 型
 
 ```ts
 function filterMatchedSkus(
@@ -33,22 +35,14 @@ function filterMatchedSkus(
 ): VariationSku[];
 ```
 
-## あなたが決めること
+## 実装者が決めること
 
-- `filterByX = x != null` フラグを先に立てるか、ループ内で毎回 `if (label != null)` するか
-- truthy チェック（`!row.label`）を入れる理由 — 空文字行を除外
+受け入れ条件を満たす範囲で、次は任せる。
 
-## JSDoc【契約】を書く考え方
-
-### この heat への当てはめ（問いのみ）
-
-- **正常時**: label のみ指定、3軸すべて指定
-- **困った入力**: 全 null、0件、variationSkus が null
-- **しないこと**: saleStatus の集計
-- **暗黙の決め**: null vs undefined（引数は null のみ）
+- `x != null` のフラグを先に立てるか、ループ内で毎回判定するか
 
 ## 進め方
 
-1. `problem.md` のみで実装
+1. このチケットだけ読んで `kata.ts` を実装する。JSDoc はチケットを蒸留する（書き方はリポジトリ直下 README）
 2. `spec.md` で答え合わせ
-3. `npx vitest forge-15-aggregate-sale-status/heat-1`
+3. `npx vitest forge-15-aggregate-sale-status/heat-1` でテストを通す

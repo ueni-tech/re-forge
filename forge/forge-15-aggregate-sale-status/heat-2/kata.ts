@@ -12,11 +12,9 @@ export type VariationSku = {
 };
 
 /**
- * 【意図】
- *  -
+ * （何のための関数か。1文。関数名の言い換えはしない）
  *
- * 【契約】
- *  -
+ * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
  */
 export function pickSaleStatusFromMatches(matched: VariationSku[]): string | undefined {
   throw new Error("not implemented");
