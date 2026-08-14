@@ -58,10 +58,7 @@ export function hasLinesForStateColorDiameter(
   );
 }
 
-export function collectDiametersForLabel(
-  variationSkus: VariationSku[],
-  label: string,
-): string[] {
+export function collectDiametersForLabel(variationSkus: VariationSku[], label: string): string[] {
   const out: string[] = [];
   variationSkus.forEach((sku) => {
     if (sku.label === label && sku.ballDiameter) out.push(sku.ballDiameter);
@@ -86,10 +83,26 @@ export function collectLinesForLabelDiameter(
 // --- ここから実装対象 ---
 
 /**
- * （何のための関数か。1文。関数名の言い換えはしない）
- *
- * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
+ * 軸の色や径が変更になったときにその組み合わせが存在しない場合に同色の径→行数の順でそれぞれの最小値に自動補正する
  */
 export function applyAxisFallbacks(state: ComboState, variationSkus: VariationSku[]): void {
-  throw new Error("not implemented");
+  if (state.ballDiameter !== undefined) {
+    if (!hasDiameterForStateColor(state, variationSkus, state.ballDiameter)) {
+      const fallback = pickMinAxisValue(collectDiametersForLabel(variationSkus, state.label));
+      if (fallback !== undefined) {
+        state.ballDiameter = fallback;
+      }
+    }
+  }
+
+  if (state.engravingLines !== undefined) {
+    if (!hasLinesForStateColorDiameter(state, variationSkus, state.engravingLines)) {
+      const fallback = pickMinAxisValue(
+        collectLinesForLabelDiameter(variationSkus, state.label, state.ballDiameter),
+      );
+      if (fallback !== undefined) {
+        state.engravingLines = fallback;
+      }
+    }
+  }
 }

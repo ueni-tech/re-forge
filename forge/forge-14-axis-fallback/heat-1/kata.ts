@@ -4,10 +4,24 @@
 // 行き詰まったら kata.solution.ts を参照。
 
 /**
- * （何のための関数か。1文。関数名の言い換えはしない）
- *
- * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
+ * 最小値へのフォールバックのために集めた文字列から値を比較して最小値の文字列を返す。
  */
 export function pickMinAxisValue(values: string[]): string | undefined {
-  throw new Error("not implemented");
+  const uniqueValues = [...new Set(values.filter(Boolean))];
+  if (uniqueValues.length === 0) return undefined;
+
+  const sorted = [...uniqueValues].sort((a, b) => {
+    const aNum = parseFloat(a);
+    const bNum = parseFloat(b);
+
+    const aIsNaN = Number.isNaN(aNum);
+    const bIsNaN = Number.isNaN(bNum);
+
+    if (aIsNaN && bIsNaN) return 0;
+    if (aIsNaN) return 1;
+    if (bIsNaN) return -1;
+    return aNum - bNum;
+  });
+
+  return sorted[0];
 }
