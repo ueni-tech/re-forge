@@ -12,9 +12,7 @@ export type VariationSku = {
 };
 
 /**
- * （何のための関数か。1文。関数名の言い換えはしない）
- *
- * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
+ * ステータス集計の前段階として指定軸と一致するskuを集める
  */
 export function filterMatchedSkus(
   variationSkus: VariationSku[] | null | undefined,
@@ -22,5 +20,18 @@ export function filterMatchedSkus(
   ballDiameter: string | null,
   engravingLines: string | null,
 ): VariationSku[] {
-  throw new Error("not implemented");
+  if (!variationSkus) return [];
+  const matched: VariationSku[] = [];
+
+  const filterByLabel = label != null;
+  const filterByDiameter = ballDiameter != null;
+  const filterLines = engravingLines != null;
+
+  variationSkus.forEach((row) => {
+    if (filterByLabel && (!row.label || row.label !== label)) return;
+    if (filterByDiameter && (!row.ballDiameter || row.ballDiameter !== ballDiameter)) return;
+    if (filterLines && (!row.engravingLines || row.engravingLines !== engravingLines)) return;
+    matched.push(row);
+  });
+  return matched;
 }
