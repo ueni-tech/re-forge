@@ -254,3 +254,4 @@ spec.md ではその判断の背後にある設計原則を解説する。
 | forge-13-sku-combo-exists | 多軸バリエーション: 組み合わせ存在判定・軸値収集 | ✅ 新設計版 |
 | forge-14-axis-fallback | 多軸バリエーション: pickMinAxisValue / applyAxisFallbacks | ✅ 新設計版 |
 | forge-15-aggregate-sale-status | 多軸バリエーション: 部分フィルタ + 販売ステータス集約 | ✅ 新設計版 |
+| forge-16-carving-block-sync | A-1 名入れブロック切替 + draft 保持 + ラベル同期 | ✅ 新設計版 |
