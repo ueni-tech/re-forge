@@ -12,10 +12,14 @@ export type VariationSku = {
 };
 
 /**
- * （何のための関数か。1文。関数名の言い換えはしない）
- *
- * （別のやり方もできたが、こう決めたこと。無ければこの行は消す）
+ * フィルタ後の SKU から、ピッカーボタンに付ける代表販売ステータスを1つ決める
+ * 在庫(3)が1つでもあれば "3"。なければ先頭行のステータスにフォールバック。
+ * 先頭行がfalsy なら "0"。
  */
 export function pickSaleStatusFromMatches(matched: VariationSku[]): string | undefined {
-  throw new Error("not implemented");
+  const IN_STOCK = 3;
+  if (!matched.length) return undefined;
+  const isStock = matched.some((row) => row.saleStatus === IN_STOCK);
+  if (isStock) return String(IN_STOCK);
+  return matched[0].saleStatus ? String(matched[0].saleStatus) : "0";
 }
