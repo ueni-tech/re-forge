@@ -5,7 +5,8 @@
 ```
 tickets-lite/
 ├── 001-sku-search/      ← 探す・並べる・段階ごとに違う意味のフィールド
-└── 002-price-display/   ← 計算・表示方針・基準額の差し替え
+├── 002-price-display/   ← 計算・表示方針・基準額の差し替え
+└── 003-shipping-fee/    ← 複数ルールの合成・免除と加算の順序・同じ判断を2つの出力が共有する
     ├── solution.ts      ← ここに書く。テストが import するのはこのファイルだけ
     ├── 01.md            ← 新規実装チケット
     ├── 01.test.ts
@@ -20,6 +21,7 @@ tickets-lite/
    npx vitest run tickets-lite/001-sku-search/01
    # または
    npx vitest run tickets-lite/002-price-display/01
+   npx vitest run tickets-lite/003-shipping-fee/01
    ```
    パスはチケット番号まで指定する（フォルダ全体だと 02 のテスト名がログに出て内容が漏れる）
 2. 緑になったら、下の **3つの問い** に答える（頭の中でよい）
@@ -30,6 +32,7 @@ tickets-lite/
    npx vitest run tickets-lite/001-sku-search
    # または
    npx vitest run tickets-lite/002-price-display
+   npx vitest run tickets-lite/003-shipping-fee
    ```
 
 ## 3つの問い（チケットが緑になるたびに）
