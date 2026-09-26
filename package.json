@@ -5,7 +5,8 @@
   "scripts": {
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "judge:full": "vitest run --mode full"
   },
   "devDependencies": {
     "@types/jsdom": "^28.0.3",
